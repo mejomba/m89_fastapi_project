@@ -1,3 +1,13 @@
+:root {
+    --transition: all 0.3s linear;
+    --clr-red-light: hsl(360, 71%, 66%);
+    --radius: 0.5rem;
+    --light-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --fixed-width: 620px;
+    --clr-primary-5: #49a6e9;
+    --clr-white: #fff;
+    --clr-red-dark: hsl(360, 67%, 44%);
+}
 @font-face {
     font-family: shabnam;
     src: url('../fonts/Shabnam-Light.ttf');
@@ -13,3 +23,79 @@ footer {
 footer img {
     width: 2rem;
 }
+
+/*
+===============
+Modal
+===============
+*/
+.hero {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+.banner {
+  background: var(--clr-white);
+  padding: 4rem 0;
+  border-radius: var(--radius);
+  box-shadow: var(--light-shadow);
+  text-align: center;
+  width: 90vw;
+  max-width: var(--fixed-width);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(154, 154, 154, 0.5);
+  display: grid;
+  place-items: center;
+  /*transition: var(--transition);*/
+  visibility: hidden;
+  z-index: -10;
+}
+/* OPEN/CLOSE MODAL */
+.open-modal {
+  visibility: visible;
+  z-index: 10;
+}
+.modal-container {
+  background: var(--clr-white);
+  border-radius: var(--radius);
+  width: 90vw;
+  max-width: 800px;
+  text-align: center;
+  display: grid;
+  position: relative;
+}
+.close-btn {
+  position: absolute;
+  top: -2rem;
+  right: -2rem;
+  font-size: 2rem;
+  font-weight: 700;
+  background: transparent;
+  border-color: transparent;
+  color: var(--clr-red-dark);
+  cursor: pointer;
+}
+.close-btn:hover {
+  font-weight: 900;
+  transform: scale(1.4);
+}
+#signup, #login {
+    height: 3rem;
+    min-height: fit-content;
+    text-decoration: none;
+    cursor: pointer;
+}
+#login {
+    border-top-right-radius: var(--radius);
+}
+#signup {
+    border-top-left-radius: var(--radius);
+}
+
