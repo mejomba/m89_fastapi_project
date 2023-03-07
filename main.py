@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 
 template = Jinja2Templates('templates')
 
-app = FastAPI()
+app = APIRouter()
 app.mount("/statics", StaticFiles(directory="statics"), name="statics")
 
 
