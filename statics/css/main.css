@@ -3,5 +3,13 @@
     src: url('../fonts/Shabnam-Light.ttf');
 }
 * {
-    font-family: Shabnam;
+    font-family: Shabnam !important;
+}
+
+footer {
+    display: flex;
+    align-items: center;
+}
+footer img {
+    width: 2rem;
 }
