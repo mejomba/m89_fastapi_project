@@ -1,9 +1,53 @@
 {% extends 'base.html' %}
 
-{% block title %} {% endblock %}
+{% block title %}
+  <h5 class="title">مقالات ما</h5>
+{% endblock %}
 
-{% block style %} {% endblock %}
+{% block style %}
+  <link rel="stylesheet" href="../statics/css/post.css">
+<!--    <div class="card text-dark bg-light mb-3" style="max-width: 18rem;">-->
+<!--      <div class="card-header">Header</div>-->
+<!--      <div class="card-body">-->
+<!--        <h5 class="card-title">Light card title</h5>-->
+<!--        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+<!--      </div>-->
+<!--    </div>-->
 
-{% block content %} {% endblock %}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="../statics/images/img1.png" class="resize" alt="">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">معرفی بوت استرپ</h5>
+              <p class="card-text">بوت استرپ مجموعه ای غول پیکر از بیت های مفید و قابل استفاده مجدد از کد است که به زبان HTML، CSS و جاوا اسکریپت نوشته شده اند. همچنین یک بستر توسعه فرانت اِند است که توسعه دهندگان و طراحان را قادر می سازد تا به سرعت وب سایت هایی کاملا واکنش گرا بسازند.</p>
+              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="img1.png" class="resize" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">معرفی بوت استرپ</h5>
+              <p class="card-text">بوت استرپ مجموعه ای غول پیکر از بیت های مفید و قابل استفاده مجدد از کد است که به زبان HTML، CSS و جاوا اسکریپت نوشته شده اند. همچنین یک بستر توسعه فرانت اِند است که توسعه دهندگان و طراحان را قادر می سازد تا به سرعت وب سایت هایی کاملا واکنش گرا بسازند.</p>
+              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+{% endblock %}
 
 {% block script %} {% endblock %}

@@ -2,8 +2,48 @@
 
 {% block title %} {{ super() }} home {% endblock %}
 
-{% block style %} {% endblock %}
+{% block style %}
+  <link rel="stylesheet" href="../statics/css/contact_us.css">
+{% endblock %}
 
-{% block content %} {% endblock %}
+{% block content %}
+<div class="wrapper">
+    <div class="container mt-5 border border-rounded p-4">
+      <h2 class="h1-responsive font-weight-bold text-center my-4">ارتباط با ما</h2>
+      <p class="text-center w-responsive mx-auto mb-5">آیا هیچ سوالی دارید؟ لطفا در تماس مستقیم با ما دریغ نکنید. تیم ما در عرض چند ساعت به شما مراجعه خواهد کرد تا به شما کمک کند.</p>
+      <br></br>
+        <form>
+          <div class="mb-3 ">
+            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="نام ">
+          </div>
+          <br></br>
+          <div class="mb-3">
+            <input type="email" class="form-control" id="exampleInput3" placeholder="ایمیل">
+          </div>
+          <br></br>
+          <div class="md-3">
+            <textarea type="text" class="form-control" id="message" cols="30" rows="10" placeholder="نظرات و انتقادات شما:"></textarea>
+          </div>
+          <br></br>
+          <button type="submit" class="btn btn-primary">ارسال نظر</button>
+        </form>
+    </div>
+
+    <div class="col-md-3 text-center">
+          <ul class="list-unstyled mb-0">
+              <i class="fas fa-map-marker-alt fa-2x"></i>
+                  <p>تهران-میدان انقلاب</p>
+
+              <i class="fas fa-phone mt-4 fa-2x"></i>
+                  <p>021-44452452</p>
+
+              <i class="fas fa-envelope mt-4 fa-2x"></i>
+                  <p>contact@mdbootstrap.com</p>
+
+          </ul>
+    </div>
+  </div>
+
+{% endblock %}
 
 {% block script %} {% endblock %}
