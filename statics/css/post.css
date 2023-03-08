@@ -1,0 +1,14 @@
+
+.card mb-3{
+    margin: center;
+    position: absolute;
+}
+
+.resize{
+    width: 400px;
+    height: 400px;
+}
+
+.title{
+    margin: 80px 80px 40px 80px;
+}
