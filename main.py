@@ -12,7 +12,7 @@ app.mount("/statics", StaticFiles(directory="statics"), name="statics")
 @app.get('/about')
 def test(request: Request):
     context = {'request': request, 'data': 'any data in python'}
-    return template.TemplateResponse('post.html', context=context)
+    return template.TemplateResponse('about.html', context=context)
 
 
 if __name__ == "__main__":
