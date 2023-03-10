@@ -13,20 +13,18 @@ class Post(BASE):
     last_update = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
     status_id = Column(Integer, ForeignKey("status.status_id", ondelete="RESTRICT"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"))
-    image = Column(BLOB)
-
-
+    # image = Column(BLOB)
 
 
 class Comment(BASE):
-    __tablename__ = "Comments"
+    __tablename__ = "comments"
 
     comment_id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
     content = Column(Text, nullable=False)
     post_id = Column(Integer, ForeignKey("posts.post_id", ondelete="CASCADE"), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.user_id", ondelete="NOACTION"))
-    status_id = Column(Integer, ForeignKey("status.status_id", ondelete="NOACTION"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.user_id", ondelete="NO ACTION"))
+    status_id = Column(Integer, ForeignKey("status.status_id", ondelete="NO ACTION"), nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
     last_update = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
     publish_date = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))

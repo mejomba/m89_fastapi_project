@@ -1,7 +1,12 @@
 import uvicorn
-from fastapi import Request, APIRouter, FastAPI
+from fastapi import Request, APIRouter
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from database_manager import engine
+from models import auth, posts
+
+auth.BASE.metadata.create_all(bind=engine)
+posts.BASE.metadata.create_all(bind=engine)
 
 template = Jinja2Templates('templates')
 
