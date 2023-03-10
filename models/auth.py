@@ -26,7 +26,3 @@ class Role(BASE):
     created_at = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
     last_update = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
-
-
-
-
