@@ -1,20 +1,27 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 import models.posts
 from schemas import post_mahsa
 from models import posts,auth
 from database_manager import get_db
-
+import jwt_manager
 
 router = APIRouter(tags=['posts'])
 
 
-@router.post('/posts', response_model=post_mahsa.ResponsePost)
-def crate_post(payload:post_mahsa.CreatePost, db: Session=Depends(get_db)):
+@router.post('/post', response_model=post_mahsa.ResponsePost)
+def crate_post(payload:post_mahsa.CreatePost,
+               db: Session = Depends(get_db),
+               current_user: auth.User = Depends(jwt_manager.get_current_user)):
     payload_dict = payload.dict()
-    payload_dict.update({'status':'pending', 'user_id':1})
-    print (payload_dict)
+    if current_user.role == "admin":
+        payload_dict.update({'status': 'published', 'user_id': current_user.user_id})
+    elif current_user.role == "writer":
+        payload_dict.update({'status': 'pending', 'user_id': current_user.user_id})
+    else:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='access denied')
+
     new_post = posts.Post(**payload_dict)
     db.add(new_post)
     db.commit()
