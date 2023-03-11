@@ -6,7 +6,7 @@ import models.auth
 import schemas.auth
 from database_manager import get_db
 import utils
-
+from main import template
 
 router = APIRouter(tags=['auth'])
 
@@ -39,3 +39,12 @@ def user_login(user_credentials: schemas.auth.UserLogin, db: Session = Depends(g
 
     token = jwt_manager.create_jwt_token({"user_id": user.user_id})
     return {"access_token": token, "token_type": "bearer"}
+
+
+@router.get('/dashboard')
+def user_profile(request: Request, current_user: models.auth.User = Depends(jwt_manager.get_current_user()),
+                 db: Session = Depends(get_db)
+                 ):
+
+    context = {'request': request, "user": current_user}
+    return template.TemplateResponse('dashboard.html', context=context)
