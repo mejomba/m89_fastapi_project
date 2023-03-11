@@ -15,14 +15,14 @@ class User(BASE):
     created_at = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
     last_update = Column (TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
 
-    role_id = Column(Integer, ForeignKey('role.role_id',ondelete='RESTRICT'), nullable=False)
+    role = Column(String, nullable=False)
 
 
-class Role(BASE):
-    __tablename__ = "role"
-
-    role_id = Column(Integer, primary_key=True)
-    role_name = Column(String, nullable=False)
-    created_at = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
-    last_update = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+# class Role(BASE):
+#     __tablename__ = "role"
+#
+#     role_id = Column(Integer, primary_key=True)
+#     role_name = Column(String, nullable=False)
+#     created_at = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
+#     last_update = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
