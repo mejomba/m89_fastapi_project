@@ -12,10 +12,13 @@ router = APIRouter(tags=['auth'])
 
 
 @router.post('/users', status_code=status.HTTP_201_CREATED, response_model=schemas.auth.ResponseUser)
-def create_user(user: schemas.auth.CreateUser, db: Session = Depends(get_db)):
+def create_user(payload: schemas.auth.CreateUser, db: Session = Depends(get_db)):
 
-    user.password = utils.hash_password(user.password)
-    new_user = models.auth.User(**user.dict())
+    payload.password = utils.hash_password(payload.password)
+
+    payload_dict = payload.dict()
+    payload_dict.update({"role": "regular_user"})
+    new_user = models.auth.User(**payload_dict)
 
     db.add(new_user)
     db.commit()
