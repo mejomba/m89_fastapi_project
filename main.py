@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from database_manager import engine
 from models import auth, posts
 import routers.auth
+import routers.post_mahsa
 
 auth.BASE.metadata.create_all(bind=engine)
 posts.BASE.metadata.create_all(bind=engine)
@@ -21,8 +22,14 @@ app.include_router(routers.post_mahsa.router)
 
 
 
+@app.get('/')
+def home(request: Request):
+    context = {'request': request, 'data': 'any data in python'}
+    return template.TemplateResponse('home.html', context=context)
+
+
 @app.get('/about')
-def test(request: Request):
+def about(request: Request):
     context = {'request': request, 'data': 'any data in python'}
     return template.TemplateResponse('about.html', context=context)
 

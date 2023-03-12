@@ -9,7 +9,7 @@ class CreatePost(BaseModel):
 
 
 class ResponsePost(CreatePost):
-    status_id: str
+    status: str
     created_at: datetime
 
     class Config:

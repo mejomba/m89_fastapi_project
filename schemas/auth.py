@@ -9,10 +9,10 @@ class CreateUser(BaseModel):
     password: str
     first_name: str
     last_name: str
-    role_id: int = 2
+    # role: str = 'regular_user'
     phone: Optional[str] | None = None
-    created_at: Optional[datetime] = None
-    last_update: Optional[datetime] = None
+    # created_at: Optional[datetime] = None
+    # last_update: Optional[datetime] = None
 
     class Config:
         orm_mode = True
@@ -23,7 +23,8 @@ class ResponseUser(BaseModel):
     username: str
     first_name: str
     last_name: str
-    phone: Optional[str] | None = None
+    phone: Optional[str]
+    created_at: Optional[datetime]
 
     class Config:
         orm_mode = True

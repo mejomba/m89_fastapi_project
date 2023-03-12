@@ -4,6 +4,44 @@
 
 {% block style %} {% endblock %}
 
-{% block content %} {% endblock %}
 
-{% block script %} {% endblock %}
+{% block content %}
+    <div class="container-fluid">
+      <div class="row">
+{% for user_post in user_posts %}
+
+          <div class="col-xl-12 col-xxl-4 col-12">
+            <div class="card mb-3 mx-auto" style="max-width: 540px;">
+              <div class="row g-0">
+                  <div class="col-md-4 d-flex align-items-center">
+                    <img src="../statics/images/img1.png" class="img-fluid rounded-start" alt="">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ user_post.title }}</h5>
+                      <p class="card-text">{{ user_post.content | truncate(150) }}</p>
+                      <p class="card-text"><small class="text-muted">
+                          <span>آخرین آپدیت:</span>
+                          <span onclick="toLocalTime('{{ user_post.last_update }}')" class="last-update">
+                              {{ user_post.last_update.date() }}
+                          </span>
+
+                      </small></p>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+{% endfor %}
+
+      </div>
+    </div>
+
+{% endblock %}
+
+
+{% block script %}
+
+
+
+{% endblock %}
