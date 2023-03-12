@@ -3,15 +3,16 @@ from sqlalchemy.orm import Session
 
 import models.posts
 from schemas import post_mahsa
-from models import posts,auth
+from models import posts, auth
 from database_manager import get_db
 import jwt_manager
 
 router = APIRouter(tags=['posts'])
 
 
+
 @router.post('/post', response_model=post_mahsa.ResponsePost)
-def crate_post(payload:post_mahsa.CreatePost,
+def crate_post(payload: post_mahsa.CreatePost,
                db: Session = Depends(get_db),
                current_user: auth.User = Depends(jwt_manager.get_current_user)):
     payload_dict = payload.dict()
@@ -40,5 +41,6 @@ def crate_post(payload:post_mahsa.CreatePost,
 @router.get('/posts/{id}')
 def get_post(id: int, db: Session = Depends(get_db)):
     return db.query(models.posts.Post).filter(models.posts.Post.post_id == id).first()
+
 
 

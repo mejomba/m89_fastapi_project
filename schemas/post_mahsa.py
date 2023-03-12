@@ -24,4 +24,3 @@ class ResponsePost(CreatePost):
     class Config:
         orm_mode = True
 
-
