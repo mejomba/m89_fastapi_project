@@ -2,21 +2,6 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
-class CreatePost(BaseModel):
-    title: str
-    content: str
-
-
-
-class ResponsePost(CreatePost):
-    status: str
-    created_at: datetime
-
-    class Config:
-        orm_mode = True
-
-
-
 class User(BaseModel):
     user_id: int | None
     email: str | None
@@ -24,3 +9,19 @@ class User(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class CreatePost(BaseModel):
+    title: str
+    content: str
+
+
+class ResponsePost(CreatePost):
+    status: str
+    created_at: datetime
+    owner: User
+
+    class Config:
+        orm_mode = True
+
+
