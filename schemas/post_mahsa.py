@@ -7,14 +7,12 @@ class CreatePost(BaseModel):
     content: str
 
 
-
 class ResponsePost(CreatePost):
     status: str
     created_at: datetime
 
     class Config:
         orm_mode = True
-
 
 
 class User(BaseModel):
