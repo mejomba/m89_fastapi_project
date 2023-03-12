@@ -23,9 +23,15 @@ app.include_router(routers.post_mahsa.router)
 
 
 @app.get('/')
-def test(request: Request):
+def home(request: Request):
     context = {'request': request, 'data': 'any data in python'}
     return template.TemplateResponse('home.html', context=context)
+
+
+@app.get('/about')
+def about(request: Request):
+    context = {'request': request, 'data': 'any data in python'}
+    return template.TemplateResponse('about.html', context=context)
 
 
 if __name__ == "__main__":
