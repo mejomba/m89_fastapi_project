@@ -6,6 +6,7 @@ from psycopg2.errors import UniqueViolation
 
 import jwt_manager
 import models.auth
+import models.posts
 import schemas.auth
 from database_manager import get_db
 import utils
@@ -55,8 +56,8 @@ def user_profile(request: Request,
                  db: Session = Depends(get_db),
                  current_user: models.auth.User = Depends(jwt_manager.get_current_user)
                  ):
-    print(request.cookies.get('access_token'))
-    context = {'request': request, "user": current_user}
+    user_posts = db.query(models.posts.Post).filter(models.posts.Post.user_id == current_user.user_id).all()
+    context = {'request': request, "user": current_user, "user_posts": user_posts}
     return template.TemplateResponse('dashboard.html', context=context)
 
 
