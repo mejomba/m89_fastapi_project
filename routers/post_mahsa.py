@@ -10,6 +10,7 @@ import jwt_manager
 router = APIRouter(tags=['posts'])
 
 
+
 @router.post('/post', response_model=post_mahsa.ResponsePost)
 def crate_post(payload:post_mahsa.CreatePost,
                db: Session = Depends(get_db),
@@ -42,5 +43,6 @@ def crate_post(payload:post_mahsa.CreatePost,
 #     if db_post:
 #        return db_post
 #     raise HTTPException(status_code=400, detail='This user has no post')
+
 
 
