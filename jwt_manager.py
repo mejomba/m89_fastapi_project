@@ -29,7 +29,7 @@ def create_jwt_token(data: Dict):
 
 def verify_access_token(token: str, credentials_exception):
     try:
-        token_decode = jwt.decode(token, SECRET_KEY, ALGORITHM)
+        token_decode = jwt.decode(token, SECRET_KEY, [ALGORITHM])
         user_id = token_decode.get("user_id")
         if user_id is None:
             raise credentials_exception
