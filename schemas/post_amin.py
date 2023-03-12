@@ -12,6 +12,9 @@ class ResponseComment(BaseModel):
     title: str
     content: str
     status: str
+
+    class Config:
+        orm_mode = True
 # class CommentBase(BaseModel):
 #     name:str
 #     body:str

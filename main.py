@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from database_manager import engine
 from models import auth, posts
 import routers.auth
-import routers.post_mahsa
+import routers.post_mahsa, routers.post_amin
 
 auth.BASE.metadata.create_all(bind=engine)
 posts.BASE.metadata.create_all(bind=engine)
@@ -18,6 +18,7 @@ app.mount("/statics", StaticFiles(directory="statics"), name="statics")
 
 app.include_router(routers.auth.router)
 app.include_router(routers.post_mahsa.router)
+app.include_router(routers.post_amin.router)
 
 
 
