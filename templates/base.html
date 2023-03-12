@@ -13,15 +13,26 @@
 </head>
 <body>
 
+
     <!-- main navbar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <button class="btn btn-outline-primary me-3 modal-btn">
+            {% if request.cookies.access_token %}
+                <button  class="btn btn-outline-primary me-3" onclick=fetchProfile('{{ request.cookies.access_token }}')>
+                    پروفایل
+                </button>
+                <button  class="btn btn-outline-danger me-3" onclick=logout('{{ request.cookies.access_token }}')>
+                    خروج
+                </button>
+            {% else %}
+                <button class="btn btn-outline-primary me-3 modal-btn">
                 ورود یا ثبت نام
             </button>
+            {% endif %}
+
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                     <li class="nav-item">
@@ -44,7 +55,10 @@
             </div>
         </div>
     </nav>
-
+        <div class="alert alert-dismissible fade show d-none text-center" role="alert" id="alert">
+          <p id="alert-message"></p>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     <!-- modal -->
       <div class="modal-overlay">
         <div class="modal-container">
@@ -149,10 +163,9 @@
         <!-- Grid container -->
     </footer>
 
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
     <script>
+
         const modalBtn = document.querySelector('.modal-btn');
         const closelBtn = document.querySelector('.close-btn');
         const modal = document.querySelector('.modal-overlay');
@@ -188,6 +201,9 @@
             signup.classList.add('bg-info');
         })
 
+        const userAlert = document.getElementById('alert');
+        const alertMessage = document.getElementById('alert-message');
+
         // signup process
         async function signUp(url="", data={}) {
                 const response = await fetch(url, {
@@ -196,14 +212,22 @@
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify(data)
-
                 })
-            console.log(response.status)
             if (response.status === 201){
-                alert('welcome')
-                window.location.replace('/')
-            } else {
-                alert("incorrect")
+                alertMessage.innerText = "ثبت نام شما انجام شد"
+                userAlert.classList.add('alert-success');
+                userAlert.classList.remove('d-none');
+                modal.classList.remove('open-modal');
+            } else if (response.status === 409) {
+                alertMessage.innerText = "خطا در ثبت نام (ایمیل یا نام کاربری تکراری)"
+                userAlert.classList.add('alert-danger');
+                userAlert.classList.remove('d-none');
+                modal.classList.remove('open-modal');
+                } else {
+                alertMessage.innerText = "خطا در ثبت نام "
+                userAlert.classList.add('alert-danger');
+                userAlert.classList.remove('d-none');
+                modal.classList.remove('open-modal');
                 }
             }
 
@@ -233,13 +257,22 @@
 
                 }).then(response => response.json())
                     .then((data) => {
-                        console.log(data)
-                        alert('ok')
-                        //window.location.replace('/')
+                        if (data.access_token){
+                            alertMessage.innerText = "ورود موفت"
+                            userAlert.classList.add('alert-success');
+                            userAlert.classList.remove('d-none');
+                            modal.classList.remove('open-modal');
+
+                            window.location.replace('/');
+                        } else {
+                            alertMessage.innerText = "خطا در ورود"
+                            userAlert.classList.add('alert-danger');
+                            userAlert.classList.remove('d-none');
+                            modal.classList.remove('open-modal');
+                        }
                     }).catch(err => {
                         alert(err)
                     })
-
             }
         loginForm = document.getElementById('login-form');
         loginForm.addEventListener('submit', function (e) {
@@ -250,6 +283,52 @@
             })
             console.log(res)
         })
+
+        // load profile
+        function fetchProfile(token){
+            fetch('/dashboard', {
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': 'Bearer ' + token
+                }
+            }).then(response=>response.text())
+                .then(data=>{
+                    document.body.innerHTML = data
+                })
+        }
+
+        function get_cookie(name){
+            return document.cookie.split(';').some(c => {
+                return c.trim().startsWith(name + '=');
+            });
+        }
+
+        function delete_cookie( name, path, domain ) {
+          if( get_cookie( name ) ) {
+            document.cookie = name + "=" +
+              ((path) ? ";path="+path:"")+
+              ((domain)?";domain="+domain:"") +
+              ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+          }
+        }
+
+        // logout process
+        function logout(token) {
+            fetch('/logout', {
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': 'Bearer ' + token
+                }
+            }).then((response) => {
+                if (response.status === 200) {
+                    delete_cookie('access_token')
+                }
+                response.text().then((data) => {
+                    window.location.replace('/')
+                    document.body.innerHTML = data
+                })
+            })
+        }
     </script>
     {% block script %}{% endblock %}
 </body>
