@@ -37,12 +37,10 @@ def crate_post(payload: post_mahsa.CreatePost,
 #     return db_post
 #
 #
-# @router.post('/posts'/, response_model=post_mahsa.User)
-# def raed_post_user(User:post_mahsa.User, db: session=Depends(get_db)):
-#     db_post = db.query(posts.Post).filter(posts.Post.user_id==User.user_id)
-#     if db_post:
-#        return db_post
-#     raise HTTPException(status_code=400, detail='This user has no post')
+
+@router.get('/posts/{id}')
+def get_post(id: int, db: Session = Depends(get_db)):
+    return db.query(models.posts.Post).filter(models.posts.Post.post_id == id).first()
 
 
 

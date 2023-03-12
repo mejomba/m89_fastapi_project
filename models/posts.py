@@ -1,5 +1,6 @@
 from database_manager import BASE
 from sqlalchemy import Column, String, TIMESTAMP, text, Integer, ForeignKey, BLOB, Text
+from sqlalchemy.orm import relationship
 import sqlalchemy.types as types
 
 
@@ -33,6 +34,7 @@ class Post(BASE):
     status = Column(String, nullable=False)
 
     user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
+    owner = relationship('User')
     # image = Column(BLOB)
 
 
