@@ -1,6 +1,7 @@
 from pydantic import BaseModel, root_validator, validator
 from datetime import datetime
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, File, UploadFile
+from typing import Optional
 
 
 
@@ -24,7 +25,6 @@ class Computer(BaseModel):
         return value
 
 class CommentBase(BaseModel):
-    title: str
     content: str
     parent_comment_id: int = None
     post_id: int

@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from fastapi.templating import Jinja2Templates
 from psycopg2.errors import UniqueViolation
-
 import jwt_manager
 import models.auth
 import models.posts
@@ -63,7 +62,7 @@ def user_profile(request: Request,
 
 
 @router.get('/logout')
-def user_profile(request: Request, response: Response,
+def user_logout(request: Request, response: Response,
                  db: Session = Depends(get_db),
                  current_user: models.auth.User = Depends(jwt_manager.get_current_user)
                  ):
