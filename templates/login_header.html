@@ -1,0 +1,13 @@
+{% if request.cookies.access_token %}
+        <button  class="btn btn-outline-primary me-3" onclick=fetchProfile('{{ request.cookies.access_token }}')>
+            پروفایل
+        </button>
+        <button  class="btn btn-outline-danger me-3" onclick=logout('{{ request.cookies.access_token }}')>
+            خروج
+        </button>
+        <button class="modal-btn d-none"></button>
+    {% else %}
+        <button class="btn btn-outline-primary me-3 modal-btn">
+        ورود یا ثبت نام
+    </button>
+    {% endif %}

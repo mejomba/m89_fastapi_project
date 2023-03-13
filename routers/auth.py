@@ -57,7 +57,8 @@ def user_profile(request: Request,
                  current_user: models.auth.User = Depends(jwt_manager.get_current_user)
                  ):
     user_posts = db.query(models.posts.Post).filter(models.posts.Post.user_id == current_user.user_id).all()
-    context = {'request': request, "user": current_user, "user_posts": user_posts}
+    comments = db.query(models.posts.Comment).filter(models.posts.Comment.user_id == current_user.user_id).all()
+    context = {'request': request, "user": current_user, "user_posts": user_posts, 'comments': comments}
     return template.TemplateResponse('dashboard.html', context=context)
 
 

@@ -7,8 +7,36 @@
 
 {% block content %}
     <div class="container-fluid">
+
+
+
       <div class="row">
-{% for user_post in user_posts %}
+      <div class="col-md-3">
+          <div class="sticky-top">
+              <ul class="list-group p-0 my-md-0 my-4">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href={{ url_for("user_post", user_name=user.username) }}>پست های من</a>
+                    <span class="badge bg-primary rounded-pill">{{ user_posts | length }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href={{ url_for("create_post") }} >ایجاد پست</a>
+                    <span class="badge bg-primary rounded-pill"></span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href={{ url_for('get_all_comment_user', user_name=user.username) }} >کامنت های من</a>
+                    <span class="badge bg-primary rounded-pill">{{ comments | length }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span role="button">نویسنده شدن</span>
+                    <span class="badge bg-primary rounded-pill">1</span>
+                  </li>
+            </ul>
+          </div>
+      </div>
+      <div class="col-md-9">
+      <div class="row">
+      <h2 class="text-center bg-info text-white py-2 sticky-top">پست ها من</h2>
+          {% for user_post in user_posts %}
 
           <div class="col-xl-12 col-xxl-4 col-12">
             <div class="card mb-3 mx-auto" style="max-width: 540px;">
@@ -32,7 +60,11 @@
               </div>
             </div>
           </div>
-{% endfor %}
+        {% endfor %}
+      </div>
+
+
+      </div>
 
       </div>
     </div>
@@ -41,7 +73,5 @@
 
 
 {% block script %}
-
-
 
 {% endblock %}

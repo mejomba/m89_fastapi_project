@@ -26,17 +26,15 @@ class Post(BASE):
     post_id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
     content = Column(String, nullable=False)
-
-
     publish_date = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
     created_at = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
     last_update = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
     status = Column(String, nullable=False)
 
     user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
-    owner = relationship('User')
-    # image = Column(BLOB)
 
+    owner = relationship('User')
+    # post_comment = relationship("Comment", back_populates="post_related")
 
 
 class Comment(BASE):
@@ -47,7 +45,6 @@ class Comment(BASE):
     content = Column(Text, nullable=False)
     post_id = Column(Integer, ForeignKey("posts.post_id", ondelete="CASCADE"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
-
     status = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
     last_update = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
@@ -55,12 +52,5 @@ class Comment(BASE):
 
     parent_comment_id = Column(Integer, ForeignKey("comments.comment_id", ondelete="CASCADE"))
 
-
-# class Status(BASE):
-#     __tablename__ = "status"
-#
-#     status_id = Column(Integer, primary_key=True)
-#     status_name = Column(String, nullable=False)
-#     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
-#     last_update = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
-
+    post_related = relationship("Post")
+    user_related = relationship("User")
