@@ -48,16 +48,25 @@ async function signUp(url="", data={}) {
     if (response.status === 201){
         alertMessage.innerText = "ثبت نام شما انجام شد"
         userAlert.classList.add('alert-success');
+        userAlert.classList.remove('alert-danger');
         userAlert.classList.remove('d-none');
         modal.classList.remove('open-modal');
     } else if (response.status === 409) {
         alertMessage.innerText = "خطا در ثبت نام (ایمیل یا نام کاربری تکراری)"
         userAlert.classList.add('alert-danger');
+        userAlert.classList.remove('alert-success');
+        userAlert.classList.remove('d-none');
+        modal.classList.remove('open-modal');
+        }else if (response.status === 400) {
+        alertMessage.innerText = "خطا در ثبت نام (شماره تلفن نامعتبر)"
+        userAlert.classList.add('alert-danger');
+        userAlert.classList.remove('alert-success');
         userAlert.classList.remove('d-none');
         modal.classList.remove('open-modal');
         } else {
         alertMessage.innerText = "خطا در ثبت نام "
         userAlert.classList.add('alert-danger');
+        userAlert.classList.remove('alert-success');
         userAlert.classList.remove('d-none');
         modal.classList.remove('open-modal');
         }

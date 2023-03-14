@@ -46,7 +46,6 @@ createPostForm.addEventListener('submit', function (e) {
     const res = createPost(this.action, localStorage.getItem('access_token') ,  {
         title: this.posttitle.value,
         content: this.postcontent.value,
-        file: this.file
     })
     console.log(res)
 });

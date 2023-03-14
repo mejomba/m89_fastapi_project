@@ -5,10 +5,11 @@ from fastapi.templating import Jinja2Templates
 
 from database_manager import engine
 from routers import auth, posts
+import models.auth, models.posts
 import jinja_custome_filter
 
-# auth.BASE.metadata.create_all(bind=engine)
-# posts.BASE.metadata.create_all(bind=engine)
+models.auth.BASE.metadata.create_all(bind=engine)
+models.posts.BASE.metadata.create_all(bind=engine)
 
 
 template = Jinja2Templates(directory='templates')

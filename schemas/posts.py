@@ -70,7 +70,6 @@ class ResponsePost(BaseModel):
 
 
 class ResponseComment(BaseModel):
-    title: str | None
     content: str | None
     status: str | None
     post_related: ResponsePost | None

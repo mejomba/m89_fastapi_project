@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import EmailStr, BaseModel, SecretStr
+from pydantic import EmailStr, BaseModel, validator
+from fastapi import HTTPException, status
 
 
 class CreateUser(BaseModel):
@@ -9,13 +10,20 @@ class CreateUser(BaseModel):
     password: str
     first_name: str
     last_name: str
-    # role: str = 'regular_user'
     phone: Optional[str] | None = None
-    # created_at: Optional[datetime] = None
-    # last_update: Optional[datetime] = None
 
     class Config:
         orm_mode = True
+
+    @validator('phone')
+    def validate_phone(cls, v):
+        if not v:
+            return v
+        if not v.isdigit():
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='phone not valid')
+        if len(v) != 11:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='phone not valid')
+        return v
 
 
 class ResponseUser(BaseModel):
