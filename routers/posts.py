@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException, Depends, Request, status, FastAPI
+import shutil
+from fastapi import APIRouter, HTTPException, Depends, Request, status, FastAPI, UploadFile, File
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
@@ -7,9 +8,9 @@ import jwt_manager
 import schemas, models
 from database_manager import get_db
 import schemas.posts
-from pydantic import ValidationError
 
-app = FastAPI()
+
+# app = FastAPI()
 router = APIRouter(tags=['posts'])
 template = Jinja2Templates(directory='templates')
 
@@ -23,7 +24,6 @@ def home_page(request: Request, db: Session = Depends(get_db)):
 
 @router.get('/post')
 def create_post(request: Request):
-
     """get create post form"""
 
     context = {'request': request, 'user': 'current_user'}
@@ -33,8 +33,9 @@ def create_post(request: Request):
 @router.post('/post', response_model=schemas.posts.ResponsePost, status_code=status.HTTP_201_CREATED)
 def create_post(payload: schemas.posts.CreatePost,
                 db: Session = Depends(get_db),
-                current_user: models.auth.User = Depends(jwt_manager.get_current_user)):
-
+                current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                ):
+    print(payload)
     """create new post depends on login user"""
 
     payload_dict = payload.dict()
@@ -136,10 +137,12 @@ def get_all_comment_user(request: Request,
                          db: Session = Depends(get_db)):
 
     user = db.query(models.auth.User).filter(models.auth.User.username == user_name).first()
-    print(user)
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user {user_name} not found")
     all_comment = db.query(models.posts.Comment).filter(models.posts.Comment.user_id == user.user_id).all()
-    context = {'request': request, 'comments': all_comment}
+    for item in all_comment:
+        print(item.post_related)
+        print(item.user_related)
+    context = {'request': request, 'comments': all_comment, 'user': user}
     return template.TemplateResponse('users_comments.html', context)
 

@@ -19,18 +19,18 @@
   <div class="container my-5 py-5">
     <div class="row d-flex justify-content-center">
       <div class="col-md-12 col-lg-10 col-xl-8">
-
+            <h3>نظرات شما</h3>
           <div class="card" id="comment-section">
             {% for comment in comments %}
             <div class="card-body border m-2">
             <div class="d-flex flex-start align-items-center">
-              <img class="rounded-circle shadow-1-strong me-3"
-                src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="60"
-                height="60" />
+{#              <img class="rounded-circle shadow-1-strong me-3"#}
+{#                src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="60"#}
+{#                height="60" />#}
               <div class="me-2">
                 <h6 class="fw-bold text-primary mb-1">{{ comment.user_related.first_name }} {{ comment.user_related.last_name }}</h6>
                 <p class="text-muted small mb-0">
-                    {{ comment.publish_date.date() }}
+                    {{ comment.publish_date.date() | to_jalali }}
                 </p>
               </div>
             </div>
@@ -42,7 +42,7 @@
 
           <div class="card-footer py-3 border-0" id="card-footer" style="background-color: #f8f9fa;">
               <form action="/comment" method="POST" id="submit-comment" data-postid="{{ post.post_id }}">
-                  <div class="d-flex flex-start w-100"'>
+                  <div class="d-flex flex-start w-100">
                       <div class="form-outline w-100 me-2">
                         <textarea class="form-control" id="comment-content" name="commentContent" placeholder="نظر شما" rows="4"
                           style="background: #fff;"></textarea>

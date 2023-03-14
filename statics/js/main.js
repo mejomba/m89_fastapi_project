@@ -92,14 +92,14 @@ async function loginUser(url="", data={}) {
             .then((data) => {
                 if (data.access_token){
                     localStorage.setItem('access_token', data.access_token)
-                    //window.location.replace('/');
-                     headerBtn.innerHTML = `<button  class="btn btn-outline-primary me-3" onclick=fetchProfile('${data.access_token}')>
-                     پروفایل
-                 </button>
-                 <button  class="btn btn-outline-danger me-3" onclick=logout('${data.access_token}')>
-                    خروج
-                </button>
-                <button class="modal-btn d-none"></button>`;
+                    window.location.replace('');
+                     // headerBtn.innerHTML = `<button  class="btn btn-outline-primary me-3" onclick=fetchProfile('${data.access_token}')>
+                     // پروفایل
+                     //     </button>
+                     //     <button  class="btn btn-outline-danger me-3" onclick=logout('${data.access_token}')>
+                     //        خروج
+                     //    </button>
+                     //    <button class="modal-btn d-none"></button>`;
                     alertMessage.innerText = "ورود موفق"
                     userAlert.classList.add('alert-success');
                     userAlert.classList.remove('alert-danger');
@@ -122,7 +122,6 @@ loginForm.addEventListener('submit', function (e) {
         email: this.email.value,
         password: this.password.value
     })
-    console.log(res)
 })
 
 // load profile
@@ -134,7 +133,10 @@ function fetchProfile(token){
         }
     }).then(response=>response.text())
         .then(data=>{
-            document.body.innerHTML = data
+            console.log('salam')
+            document.body.innerHTML = data;
+
+
         })
 }
 
@@ -163,19 +165,18 @@ function logout(token) {
     }).then((response) => {
         if (response.status === 200) {
             delete_cookie('access_token')
+            localStorage.removeItem('access_token');
+
         }
         response.text().then((data) => {
+            delete_cookie('access_token')
+            localStorage.removeItem('access_token');
             window.location.replace('/')
             document.body.innerHTML = data
+            console.log(localStorage.getItem('access_token'))
         })
     })
 }
-    function toLocalTime(last_update){
-        const date = new Date(last_update);
-        document.querySelectorAll('.last-update').forEach(function (item){
-            item.innerText = date.toLocaleDateString("fa-IR")
-        })
-    }
 
     function getPostByUserName(username, token){
     fetch(`/users/${username}`, {
@@ -189,4 +190,3 @@ function logout(token) {
         })
     })
     }
-

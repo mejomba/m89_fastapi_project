@@ -29,7 +29,6 @@ async function createComment(url="", token, data={}) {
         body: JSON.stringify(data)
     })
     if (response.status === 201) {
-        console.log('ثبت شد')
         alertMessage.innerText = "کامنت با موفقیت ثب شد"
         userAlert.classList.add('alert-success');
         userAlert.classList.remove('alert-danger');
@@ -37,13 +36,17 @@ async function createComment(url="", token, data={}) {
         modal.classList.remove('open-modal');
         // commentSection.insertBefore(commentData, cardFooter)
     } else if(response.status === 400) {
-        console.log('title and content required')
         alertMessage.innerText = "متن کامنت خالی است"
         userAlert.classList.add('alert-danger');
         userAlert.classList.remove('d-none');
         modal.classList.remove('open-modal');
+    } else if (response.status === 401) {
+        alertMessage.innerText = "خطا: برای نظر دادن ابتدا وارد شوید"
+        userAlert.classList.add('alert-danger');
+        userAlert.classList.remove('d-none');
+        modal.classList.remove('open-modal');
     } else {
-        alertMessage.innerText = "خطا: فیلد های ورودی را چک کنید"
+        alertMessage.innerText = "خطا: ناشناخته"
         userAlert.classList.add('alert-danger');
         userAlert.classList.remove('d-none');
         modal.classList.remove('open-modal');
@@ -57,7 +60,6 @@ submitCommentForm.addEventListener('submit', function (e) {
     console.log(this.commentContent.value);
     e.preventDefault()
     const res = createComment(this.action, localStorage.getItem('access_token') ,  {
-        title: 'sample title',
         content: this.commentContent.value,
         post_id: this.dataset.postid
     })

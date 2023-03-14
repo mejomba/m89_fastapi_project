@@ -41,7 +41,6 @@ class Comment(BASE):
     __tablename__ = "comments"
 
     comment_id = Column(Integer, primary_key=True)
-    title = Column(String, nullable=False)
     content = Column(Text, nullable=False)
     post_id = Column(Integer, ForeignKey("posts.post_id", ondelete="CASCADE"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)

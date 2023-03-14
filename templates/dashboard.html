@@ -4,12 +4,24 @@
 
 {% block style %} {% endblock %}
 
+{% block header %}
+
+
+
+    <button  class="btn btn-outline-primary me-3" onclick=fetchProfile(`${jwt_token}`)>
+        پروفایل
+    </button>
+    <button  class="btn btn-outline-danger me-3" onclick=logout(`${jwt_token}`)>
+        خروج
+    </button>
+    <button class="modal-btn d-none"></button>`
+
+
+{% endblock %}
 
 {% block content %}
+
     <div class="container-fluid">
-
-
-
       <div class="row">
       <div class="col-md-3">
           <div class="sticky-top">
@@ -28,7 +40,6 @@
                   </li>
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span role="button">نویسنده شدن</span>
-                    <span class="badge bg-primary rounded-pill">1</span>
                   </li>
             </ul>
           </div>
@@ -50,11 +61,11 @@
                       <p class="card-text">{{ user_post.content | truncate(150) }}</p>
                       <p class="card-text"><small class="text-muted">
                           <span>آخرین آپدیت:</span>
-                          <span onclick="toLocalTime('{{ user_post.last_update }}')" class="last-update">
-                              {{ user_post.last_update.date() }}
+                          <span class="last-update">
+                              {{ user_post.last_update.date() | to_jalali}}
                           </span>
-
                       </small></p>
+                        <a class="btn btn-outline-info" href={{ url_for('get_post', id=user_post.post_id) }} >مطالعه بیشتر</a>
                     </div>
                   </div>
               </div>
