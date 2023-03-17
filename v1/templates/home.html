@@ -16,13 +16,13 @@
     {% for post in posts %}
 
         <article class="row">
-        <div class="col-md-3 text-center d-flex align-items-center">
-            <img src="../statics/images/post-image.png" alt="" class="w-100">
-        </div>
-            <div class="col-md-9">
+{#        <div class="col-md-3 text-center d-flex align-items-center">#}
+{#            <img src="../statics/images/post-image.png" alt="" class="w-100">#}
+{#        </div>#}
+            <div class="col-md-12">
                 <div class="p-5 w-100">
                 <h3>{{ post.title }}</h3>
-                <p>{{ post.content | truncate(150) }}</p>
+                <p>{{ post.content | truncate(250) }}</p>
 {#                <div>#}
                     <span>نویسنده:</span>
                     <span>

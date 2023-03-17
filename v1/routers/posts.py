@@ -76,7 +76,8 @@ def get_post(request: Request, id: int, db: Session = Depends(get_db)):
 @router.get("/all_posts", response_model=List[schemas.posts.GetPost])
 def all_published_post(request: Request, db: Session = Depends(get_db)):
 
-    all_posts = db.query(models.posts.Post).filter(models.posts.Post.status == "published").all()
+    # all_posts = db.query(models.posts.Post).filter(models.posts.Post.status == "published").all()
+    all_posts = db.query(models.posts.Post).all()
     context = {'request': request, 'all_posts': all_posts}
     return template.TemplateResponse('posts.html', context)
 

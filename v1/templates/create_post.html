@@ -8,7 +8,7 @@
 {% block content %}
 
     <div class="container">
-    <form class="row g-3 my-5 border border-rounded shadow-lg p-2" method="POST" action="/post" id="create-post-form" >
+    <form class="row g-3 my-5 border border-rounded shadow-lg p-2" method="POST" action="/post" id="create-post-form" enctype="multipart/form-data" >
         <div class="mb-3">
           <input type="text" class="form-control" id="postTitle" name="posttitle" placeholder="عنوان پست">
         </div>

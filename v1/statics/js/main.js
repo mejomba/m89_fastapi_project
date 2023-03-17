@@ -35,7 +35,10 @@ signup.addEventListener('click', ()=> {
 
 const userAlert = document.getElementById('alert');
 const alertMessage = document.getElementById('alert-message');
-
+const closeAlert = document.querySelector('.close-alert');
+closeAlert.addEventListener('click', function (){
+    userAlert.classList.add('d-none')
+})
         // signup process
 async function signUp(url="", data={}) {
         const response = await fetch(url, {
@@ -102,13 +105,6 @@ async function loginUser(url="", data={}) {
                 if (data.access_token){
                     localStorage.setItem('access_token', data.access_token)
                     window.location.replace('');
-                     // headerBtn.innerHTML = `<button  class="btn btn-outline-primary me-3" onclick=fetchProfile('${data.access_token}')>
-                     // پروفایل
-                     //     </button>
-                     //     <button  class="btn btn-outline-danger me-3" onclick=logout('${data.access_token}')>
-                     //        خروج
-                     //    </button>
-                     //    <button class="modal-btn d-none"></button>`;
                     alertMessage.innerText = "ورود موفق"
                     userAlert.classList.add('alert-success');
                     userAlert.classList.remove('alert-danger');

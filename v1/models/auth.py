@@ -1,5 +1,5 @@
 from database_manager import BASE
-from sqlalchemy import Column, String, TIMESTAMP, text, Integer
+from sqlalchemy import Column, String, TIMESTAMP, text, Integer, Boolean
 
 
 class User(BASE):
