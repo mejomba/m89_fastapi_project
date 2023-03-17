@@ -28,7 +28,7 @@ class UserRequest(BASE):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_update = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
-    __table_args__ = (UniqueConstraint('user_id', 'request_name', name='unique_request'),)
+    __table_args__ = (UniqueConstraint('user_id', 'request_name', 'status', name='unique_request'),)
     owner = relationship('User')
 
 
