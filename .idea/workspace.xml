@@ -5,65 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="817f8ce3-eb78-42c1-b029-915dbd98c96d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/alembic.ini" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/alembic/README" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/alembic/env.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/alembic/script.py.mako" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/alembic/versions/2b9b4488581f_username_unique.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/alembic/versions/83792f2a4cbe_02__username_unique.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/alembic/versions/a179c5a4b86b_03__remove_comment_title.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/database_manager.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jalali_date.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jinja_custome_filter.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jwt_manager.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/auth.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/posts.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirement.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/routers/auth.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/routers/posts.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/schemas/auth.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/schemas/posts.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/css/about.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/css/contact_us.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/css/login.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/css/main.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/fonts/Shabnam-Light.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/Hesam-mg.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/address.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/amin_rabiee.webp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/close-button.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/email.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/facebook.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/github.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/img1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/instagram.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/linkedin-2.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/mahsa.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/mojtaba.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/post-image.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/telephone.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/twitter.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/images/youtube.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/js/create_post.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/js/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statics/js/post.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/about.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contact_us.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/create_post.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/dashboard.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/home.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/login_header.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/post.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/posts.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/upload.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/user_post.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/users_comments.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../pyproject/config/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pyproject/config/config/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../pyproject/config/courses/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pyproject/config/courses/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../pyproject/config/courses/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pyproject/config/courses/views.py" afterDir="false" />
@@ -122,7 +64,7 @@
       <recent name="$PROJECT_DIR$/statics/images" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main (1)">
+  <component name="RunManager" selected="Python.main (2)">
     <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="m89_fastapi_project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -252,8 +194,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.main (2)" />
+        <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.main" />
         <item itemvalue="Python tests.pytest in main.py" />
         <item itemvalue="Python tests. main.py" />
@@ -276,7 +218,7 @@
       <workItem from="1678541061283" duration="123757000" />
       <workItem from="1678837115523" duration="4421000" />
       <workItem from="1678887229525" duration="17932000" />
-      <workItem from="1678953888513" duration="34879000" />
+      <workItem from="1678953888513" duration="39542000" />
     </task>
     <servers />
   </component>
@@ -284,7 +226,7 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/m89_fastapi_project$main__2_.coverage" NAME="main (2) Coverage Results" MODIFIED="1679032510232" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/v2" />
+    <SUITE FILE_PATH="coverage/m89_fastapi_project$main__2_.coverage" NAME="main (2) Coverage Results" MODIFIED="1679043598086" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/v2" />
     <SUITE FILE_PATH="coverage/m89_fastapi_project$main.coverage" NAME="main Coverage Results" MODIFIED="1678837527327" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/m89_fastapi_project$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1679038279552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/v1" />
     <SUITE FILE_PATH="coverage/m89_fastapi_project$pytest_in_main_py.coverage" NAME="pytest in main.py Coverage Results" MODIFIED="1678385046350" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
