@@ -61,7 +61,7 @@ def user_profile(request: Request,
     return template.TemplateResponse('dashboard.html', context=context)
 
 
-@router.get('/logout')
+@router.post('/')
 def user_logout(request: Request, response: Response,
                  db: Session = Depends(get_db),
                  current_user: models.auth.User = Depends(jwt_manager.get_current_user)

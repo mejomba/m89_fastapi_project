@@ -15,10 +15,9 @@
     {% for post in all_user_posts %}
     <section class="container">
         <article class="d-flex align-items-center">
-            <img src="../statics/images/post-image.png" alt="" class="post-img-thumbnail">
             <div class="p-5">
                 <h3>{{ post.title }}</h3>
-                <p>{{ post.content | truncate(150) }}</p>
+                <p>{{ post.content | truncate(200) }}</p>
                 <a class="btn btn-outline-info" href={{ url_for('get_post', id=post.post_id) }} >مطالعه بیشتر</a>
             </div>
         </article>

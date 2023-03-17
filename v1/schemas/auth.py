@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import EmailStr, BaseModel, validator
+from pydantic import EmailStr, BaseModel, validator, BaseSettings
 from fastapi import HTTPException, status
 
 

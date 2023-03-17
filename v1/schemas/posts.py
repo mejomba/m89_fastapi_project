@@ -2,11 +2,9 @@ from pydantic import BaseModel, root_validator, validator
 from datetime import datetime
 from fastapi import HTTPException, status, File, UploadFile
 from typing import Optional
-
-
-
-
 from pydantic import BaseModel, validator
+
+
 class Computer(BaseModel):
     brand: str
     storage_type: str
@@ -73,6 +71,7 @@ class ResponseComment(BaseModel):
     content: str | None
     status: str | None
     post_related: ResponsePost | None
+    user_related: User | None
 
     class Config:
         orm_mode = True
