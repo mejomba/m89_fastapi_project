@@ -4,7 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
+    <list default="true" id="817f8ce3-eb78-42c1-b029-915dbd98c96d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pyproject/config/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pyproject/config/config/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pyproject/config/courses/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pyproject/config/courses/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pyproject/config/courses/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pyproject/config/courses/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pyproject/config/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/../pyproject/config/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pyproject/config/star_ratings/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pyproject/config/star_ratings/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pyproject/config/star_ratings/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pyproject/config/star_ratings/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pyproject/config/star_ratings/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pyproject/config/star_ratings/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pyproject/config/templates/course/info.html" beforeDir="false" afterPath="$PROJECT_DIR$/../pyproject/config/templates/course/info.html" afterDir="false" />
+    </list>
+=======
     <list default="true" id="817f8ce3-eb78-42c1-b029-915dbd98c96d" name="Changes" comment="" />
+>>>>>>> f996d9c8b4b9a5b9feed0cfb7b921cb787a74e89
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -54,7 +68,7 @@
       <recent name="$PROJECT_DIR$/statics/images" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main (1)">
+  <component name="RunManager" selected="Python.main (2)">
     <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="m89_fastapi_project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -184,8 +198,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.main (2)" />
+        <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.main" />
         <item itemvalue="Python tests.pytest in main.py" />
         <item itemvalue="Python tests. main.py" />
@@ -208,11 +222,20 @@
       <workItem from="1678541061283" duration="123757000" />
       <workItem from="1678837115523" duration="4421000" />
       <workItem from="1678887229525" duration="17932000" />
-      <workItem from="1678953888513" duration="34879000" />
+      <workItem from="1678953888513" duration="39542000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+<<<<<<< HEAD
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/m89_fastapi_project$main__2_.coverage" NAME="main (2) Coverage Results" MODIFIED="1679043598086" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/v2" />
+    <SUITE FILE_PATH="coverage/m89_fastapi_project$main.coverage" NAME="main Coverage Results" MODIFIED="1678837527327" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/m89_fastapi_project$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1679038279552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/v1" />
+    <SUITE FILE_PATH="coverage/m89_fastapi_project$pytest_in_main_py.coverage" NAME="pytest in main.py Coverage Results" MODIFIED="1678385046350" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+=======
+>>>>>>> f996d9c8b4b9a5b9feed0cfb7b921cb787a74e89
 </project>
