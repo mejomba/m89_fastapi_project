@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ super() }}
+  مقالات ما
+{% endblock %}
+
+{% block style %} {% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+      <div class="row my-5">
+
+            {% for post in all_posts %}
+                    <div class="col-xl-6 col-xxl-4 col-12">
+                        <div class="card mb-3 mx-auto" style="max-width: 540px;">
+                          <div class="row g-0">
+
+                              <div class="col-md-8">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ post.title }}</h5>
+                                  <p class="card-text">{{ post.content }}</p>
+                                  <p class="card-text"><small class="text-muted">
+                                      <span>آخرین آپدیت:</span>
+                                      <span>{{ post.last_update.date() | to_jalali }}</span>
+                                  </small></p>
+                                    <span>نویسنده:</span>
+                                    <span>{{ post.owner.first_name }}  {{ post.owner.last_name }}</span>
+                                    <a class="btn btn-outline-info" href={{ url_for('get_post', id=post.post_id) }} >مطالعه بیشتر</a>
+                                </div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+            {% endfor %}
+
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block script %} {% endblock %}

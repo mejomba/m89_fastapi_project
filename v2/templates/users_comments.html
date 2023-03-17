@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ super() }} home {% endblock %}
+
+{% block style %}
+    <style>
+        .post-img-thumbnail {
+            width: 16rem;
+            height: 9rem;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row my-5">
+            {% for comment in comments %}
+            <section class="col-md-4 col-12 align-items-center">
+                <article class="p-4 border my-1">
+
+                        <p>{{ comment.content }}</p>
+                        <span class="ms-2">پست:</span><a href={{ url_for('get_post', id=comment.post_related.post_id) }}>{{ comment.post_related.title }}</a><br>
+                        <span class="ms-2">نویسنده:</span><span>{{ comment.user_related.first_name }} {{ comment.user_related.last_name }}</span><br>
+                        <span class="ms-2">آخرین ویرایش:</span><span>{{ comment.last_update.date() | to_jalali }}</span>
+
+                </article>
+            </section>
+            {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block script %} {% endblock %}

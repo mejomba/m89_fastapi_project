@@ -1,0 +1,19 @@
+
+
+.team4 ul li a {
+  color: #8d97ad;
+  padding-right: 15px;
+  -webkit-transition: 0.1s ease-in;
+  -o-transition: 0.1s ease-in;
+  transition: 0.1s ease-in;
+}
+
+.team4 ul li a:hover {
+  -webkit-transform: translate3d(0px, -5px, 0px);
+  transform: translate3d(0px, -5px, 0px);
+	color: #316ce8;
+}
+
+.list-inline-item img {
+    width: 2rem;
+}
