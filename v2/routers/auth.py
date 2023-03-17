@@ -119,8 +119,13 @@ def get_user_manage(request: Request,
                     current_user: models.auth.User = Depends(jwt_manager.get_current_user)):
 
     if current_user.role == 'admin':
-        user_requests = db.query(models.auth.UserRequest).all()
-        context = {'request': request, 'user': current_user, 'user_requests': user_requests}
+        user_requests = db.query(models.auth.UserRequest).order_by(models.auth.UserRequest.status).all()
+        c = 0
+        for item in user_requests:
+            if item.status == 'pending':
+                c += 1
+        # user_requests_pending = db.query(models.auth.UserRequest).filter(models.auth.UserRequest.status == 'pending').all()
+        context = {'request': request, 'user': current_user, 'user_requests': user_requests, 'request_count': c}
         return template.TemplateResponse('user_manage.html', context)
 
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='شما به این بخش دسترسی ندارید')

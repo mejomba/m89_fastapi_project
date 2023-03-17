@@ -116,7 +116,7 @@
                   {% if user.role == 'admin' %}
                       <li class="list-group-item d-flex justify-content-between align-items-center">
                         <a href={{ url_for("get_user_manage") }} >درخواست های کاربران</a>
-                        <span class="badge bg-primary rounded-pill"></span>
+                        <span class="badge bg-primary rounded-pill">{{ request_count }}</span>
                       </li>
                       <li class="list-group-item d-flex justify-content-between align-items-center">
                         <a href={{ url_for("get_post_manage") }} >پست های در انتظار</a>
@@ -154,7 +154,11 @@
           <div class="col-xl-12 col-xxl-4 col-12">
             <div class="card mb-3 mx-auto" style="max-width: 540px;">
               <div class="row g-0">
+              {% if user_request.status == 'pending' %}
+                  <div class="col-md-12 shadow-lg">
+              {% else %}
                   <div class="col-md-12">
+              {% endif %}
                     <div class="card-body">
                       <div class="d-flex justify-content-between align-items-center">
                           <h5 class="card-title">{{ user_request.request_name }}</h5>
@@ -176,15 +180,11 @@
 
 
                     {% if user_request.status == 'pending' %}
-<!--                        <form class="writer-request-form" action={{ url_for('change_user_role', user_request_id=user_request.user_request_id) }}>-->
-<!--                        <button class="btn btn-outline-success" type="submit" class="confirm-request" >تایید</button>-->
-<!--                            <button class="btn btn-outline-danger" type="submit" class="reject-request" >رد درخواست</button>-->
-<!--                            <input type="hidden" name="ok" value='ok'>-->
-<!--                            <input type="hidden" name="reject" value='reject'>-->
-<!--                        </form>-->
-                        <form action={{ url_for('change_user_role', user_request_id=user_request.user_request_id) }} onsubmit="writerAccess(this.action, data{user_request_action: this.submitted}); return;">
-                            <input onclick="this.form.submitted=this.value;" type="submit" value="ok" />
-                            <input onclick="this.form.submitted=this.value;" type="submit" value="reject" />
+                        <form class="writer-request-form" action={{ url_for('change_user_role', user_request_id=user_request.user_request_id) }}>
+                            <button class="btn btn-outline-success confirm-request" type="submit" >تایید</button>
+                            <button class="btn btn-outline-danger reject-request" type="submit" >رد درخواست</button>
+                            <input type="hidden" name="ok" value='ok'>
+                            <input type="hidden" name="reject" value='reject'>
                         </form>
 
                     {% endif %}

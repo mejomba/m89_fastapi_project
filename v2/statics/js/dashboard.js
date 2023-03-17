@@ -13,7 +13,7 @@ async function requestForWriter(url="", data={}) {
         userAlert.classList.remove('d-none');
         modal.classList.remove('open-modal');
     } else if (response.status === 400) {
-        alertMessage.innerText = "خطا در ثبت نام (این درخواست قبلا ارسال شده است)"
+        alertMessage.innerText = "خطا (این درخواست قبلا ارسال شده است)"
         userAlert.classList.add('alert-danger');
         userAlert.classList.remove('alert-success');
         userAlert.classList.remove('d-none');

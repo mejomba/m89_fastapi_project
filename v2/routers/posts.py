@@ -125,11 +125,13 @@ def create_comment(payload: schemas.posts.CommentBase,
     payload_dict = payload.dict()
     payload_dict.update({'status': 'pending', 'user_id': current_user.user_id})
     new_comment = models.posts.Comment(**payload_dict)
-    db.add(new_comment)
-    db.commit()
-    db.refresh(new_comment)
-    return new_comment
-
+    try:
+        db.add(new_comment)
+        db.commit()
+        db.refresh(new_comment)
+        return new_comment
+    except Exception:
+        return {'detail': 'error'}
 
 @router.get('/comments', response_model=List[schemas.posts.ResponseComment])
 def get_all_comment(request: Request, db: Session = Depends(get_db)):
@@ -143,12 +145,12 @@ def get_all_comment_user(request: Request,
                          db: Session = Depends(get_db)):
 
     user = db.query(models.auth.User).filter(models.auth.User.username == user_name).first()
-    print(user.user_id)
+
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user {user_name} not found")
+
     all_comment = db.query(models.posts.Comment).filter(models.posts.Comment.user_id == user.user_id).all()
-    for item in all_comment:
-        print(item.user_related.email)
+
     context = {'request': request, 'comments': all_comment, 'user': user}
     return template.TemplateResponse('users_comments.html', context)
 
