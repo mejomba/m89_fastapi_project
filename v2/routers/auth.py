@@ -148,7 +148,7 @@ def change_user_role(
             db.commit()
         elif payload.user_request_action == 'reject':
             user_request_query = db.query(models.auth.UserRequest).filter(
-                models.auth.UserRequest.user_request_id == user_request_id).first()
+                models.auth.UserRequest.user_request_id == user_request_id)
             user_request_query.update({'status': 'reject', 'last_update': datetime.now()}, synchronize_session=False)
             db.commit()
 
