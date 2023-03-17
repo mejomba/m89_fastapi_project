@@ -176,26 +176,21 @@
 
 
                     {% if user_request.status == 'pending' %}
-                        <form id="writer-request-form" action={{ url_for('change_user_role', user_request_id=user_request.user_request_id) }}>
-                        <button class="btn btn-outline-success" type="button" id="confirm-request" >تایید</button>
-                            <button class="btn btn-outline-danger" type="button" id="reject-request" >رد درخواست</button>
-                            <input type="hidden" name="ok" value='ok'>
-                            <input type="hidden" name="reject" value='reject'>
+<!--                        <form class="writer-request-form" action={{ url_for('change_user_role', user_request_id=user_request.user_request_id) }}>-->
+<!--                        <button class="btn btn-outline-success" type="submit" class="confirm-request" >تایید</button>-->
+<!--                            <button class="btn btn-outline-danger" type="submit" class="reject-request" >رد درخواست</button>-->
+<!--                            <input type="hidden" name="ok" value='ok'>-->
+<!--                            <input type="hidden" name="reject" value='reject'>-->
+<!--                        </form>-->
+                        <form action={{ url_for('change_user_role', user_request_id=user_request.user_request_id) }} onsubmit="writerAccess(this.action, data{user_request_action: this.submitted}); return;">
+                            <input onclick="this.form.submitted=this.value;" type="submit" value="ok" />
+                            <input onclick="this.form.submitted=this.value;" type="submit" value="reject" />
                         </form>
+
                     {% endif %}
 
 
 
-
-{#                        <a class="btn btn-outline-success" id="writer-request-accept" href={{ url_for('change_user_role', user_request_id=user_request.user_request_id) }} >تایید</a>#}
-{#                        <a class="btn btn-outline-danger" id="writer-request-reject" href={{ url_for('change_user_role', user_request_id=user_request.user_request_id) }} >رد درخواست</a>#}
-{#                      <p class="card-text"><small class="text-muted">#}
-{#                          <span>آخرین آپدیت:</span>#}
-{#                          <span class="last-update">#}
-{#                              {{ user_post.last_update.date() | to_jalali}}#}
-{#                          </span>#}
-{#                      </small></p>#}
-{#                        <a class="btn btn-outline-info" href={{ url_for('get_post', id=user_post.post_id) }} >مطالعه بیشتر</a>#}
                     </div>
                   </div>
               </div>
