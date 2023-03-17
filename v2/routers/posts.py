@@ -59,21 +59,21 @@ def create_post(payload: schemas.posts.CreatePost,
 
 
 @router.get("/posts/{id}", response_model=Dict)
-def get_post(request: Request, id: int, db: Session = Depends(get_db)):
+def get_post(request: Request, id: int,
+             db: Session = Depends(get_db),
+             current_user: Session = Depends(jwt_manager.get_current_user)
+             ):
 
     post = db.query(models.posts.Post).filter(models.posts.Post.post_id == id).first()
 
     if not post:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"post with id {id} does not exit"
-        )
+        return template.TemplateResponse('404.html', {'request': request})
 
     comments = db.query(models.posts.Comment) \
         .filter(models.posts.Comment.post_id == post.post_id) \
         .order_by(desc(models.posts.Comment.publish_date)).all()
 
-    context = {'request': request, 'post': post, 'comments': comments}
+    context = {'request': request, 'post': post, 'comments': comments, 'user': current_user}
     return template.TemplateResponse('post.html', context)
 
 

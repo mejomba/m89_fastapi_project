@@ -155,12 +155,10 @@
           <div class="col-xl-12 col-xxl-4 col-12">
             <div class="card mb-3 mx-auto" style="max-width: 540px;">
               <div class="row g-0">
-                  <div class="col-md-4 d-flex align-items-center">
-                    <img src="../statics/images/img1.png" class="img-fluid rounded-start" alt="">
-                  </div>
-                  <div class="col-md-8">
+                  <div class="col-md-12">
                     <div class="card-body">
                       <h5 class="card-title">{{ user_post.title }}</h5>
+                        <hr>
                       <p class="card-text">{{ user_post.content | truncate(150) }}</p>
                       <p class="card-text"><small class="text-muted">
                           <span>آخرین آپدیت:</span>
@@ -169,6 +167,12 @@
                           </span>
                       </small></p>
                         <a class="btn btn-outline-info" href={{ url_for('get_post', id=user_post.post_id) }} >مطالعه بیشتر</a>
+                        <div class="d-flex justify-content-end mt-2">
+                            <a class="text-info btn btn-link" href={{ url_for('get_post', id=user_post.post_id) }} >ویرایش</a>
+                            <form action={{ url_for('delete_post', post_id=user_post.post_id) }}>
+                                <button class="text-danger btn btn-link" id="delete-post" >حذف</button>
+                            </form>
+                        </div>
                     </div>
                   </div>
               </div>

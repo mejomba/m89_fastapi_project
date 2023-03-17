@@ -160,7 +160,7 @@
                           <h5 class="card-title">{{ user_request.request_name }}</h5>
                           {% if user_request.status == 'pending' %}
                             <span class="badge text-bg-info">{{ user_request.status }}</span>
-                          {% elif user_request.status == 'rejected' %}
+                          {% elif user_request.status == 'reject' %}
                               <span class="badge text-bg-danger">{{ user_request.status }}</span>
                           {% elif user_request.status == 'published' %}
                               <span class="badge text-bg-success">{{ user_request.status }}</span>
