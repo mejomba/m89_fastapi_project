@@ -39,7 +39,7 @@ async function editComment(url="", token, data={}) {
 
 
 
-// update post
+// edit comment
 createPostForm = document.getElementById('update-comment-form');
 createPostForm.addEventListener('submit', function (e) {
     e.preventDefault()
