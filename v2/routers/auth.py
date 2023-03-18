@@ -138,9 +138,7 @@ def change_user_role(
                      db: Session = Depends(get_db),
                      current_user: models.auth.User = Depends(jwt_manager.get_current_user)
                      ):
-    print(user_request_id)
-    print(payload)
-    print(current_user.role)
+
     if current_user.role == 'admin':
         if payload.user_request_action == 'ok':
             user_request_query = db.query(models.auth.UserRequest).filter(models.auth.UserRequest.user_request_id == user_request_id)

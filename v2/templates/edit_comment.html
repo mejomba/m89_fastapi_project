@@ -97,96 +97,29 @@
 {% if user %}
     <div class="container-fluid">
       <div class="row">
+      <div class="col-md-12">
 
-          <div class="col-md-3">
-          <div class="sticky-top">
-              <ul class="list-group p-0 my-md-0 my-4">
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <a href={{ url_for("user_profile") }}>پست های من</a>
-                    <span class="badge bg-primary rounded-pill">{{ user_posts | length }}</span>
-                  </li>
-
-                  {% if user.role != 'regular_user' %}
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a href={{ url_for("create_post") }} >ایجاد پست</a>
-                        <span class="badge bg-primary rounded-pill"></span>
-                      </li>
-                  {% endif %}
-
-                  {% if user.role == 'admin' %}
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a href={{ url_for("get_user_manage") }} >درخواست های کاربران</a>
-                        <span class="badge bg-primary rounded-pill"></span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a href={{ url_for("post_manage") }} >پست های در انتظار</a>
-                        <span class="badge bg-primary rounded-pill"></span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a href={{ url_for("comment_manage") }} >کامنت های در انتظار</a>
-                        <span class="badge bg-primary rounded-pill"></span>
-                      </li>
-                  {% endif %}
-
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <a href={{ url_for('get_all_comment_user', user_name=user.username) }} >کامنت های من</a>
-                    <span class="badge bg-primary rounded-pill">{{ comments | length }}</span>
-                  </li>
-              {% if user.role == 'regular_user' %}
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span role="button" id="request-writer">نویسنده شدن</span>
-                  </li>
-              {% endif %}
-            </ul>
-          </div>
-      </div>
-
-
-      <div class="col-md-9">
-      <div class="row">
       {% set dashboard_url = url_for('user_profile')  %}
 
       {% if request.url == dashboard_url %}
           <h2 class="text-center bg-info text-white py-2 sticky-top">پست ها من</h2>
       {% endif %}
 
-          {% for user_post in user_posts %}
 
-          <div class="col-xl-12 col-xxl-4 col-12">
-            <div class="card mb-3 mx-auto" style="max-width: 540px;">
-                <div class="col-md-12">
-                      <img width="100%" src={{ user_post.image }} alt="image">
-                  </div>
-              <div class="row g-0">
+            <div class="container">
+                <h2 class="text-center bg-info p-2">ویرایش کامنت</h2>
+                <form class="row g-3 my-5 border border-rounded shadow-lg p-2" method="POST" action={{ url_for('edit_comment', comment_id=comment.comment_id) }} id="update-comment-form" >
+                <div class="mb-3">
+                  <textarea class="form-control" id="postContent" name="updatecommentcontent" rows="6" placeholder="متن پست">{{ comment.content }}</textarea>
+                </div>
 
-                  <div class="col-md-12">
-                    <div class="card-body">
-                      <h5 class="card-title">{{ user_post.title }}</h5>
-                        <hr>
-                      <p class="card-text">{{ user_post.content | truncate(150) }}</p>
-                      <p class="card-text"><small class="text-muted">
-                          <span>آخرین آپدیت:</span>
-                          <span class="last-update">
-                              {{ user_post.last_update.date() | to_jalali}}
-                          </span>
-                      </small></p>
-                        <a class="btn btn-outline-info" href={{ url_for('get_post', id=user_post.post_id) }} >مطالعه بیشتر</a>
-                        <div class="d-flex justify-content-end mt-2">
-                            <a class="text-info btn btn-link" href={{ url_for('update_post', post_id=user_post.post_id) }} >ویرایش</a>
-                            <form action={{ url_for('delete_post', post_id=user_post.post_id) }}>
-                                <button class="text-danger btn btn-link delete-post">حذف</button>
-                            </form>
-                        </div>
-                    </div>
-                  </div>
-              </div>
+                <button type="submit" class="btn btn-primary mb-3">ارسال کامنت</button>
+            </form>
             </div>
-          </div>
-        {% endfor %}
+
       </div>
 
 
-      </div>
 
       </div>
     </div>
@@ -197,5 +130,5 @@
 
 
 {% block script %}
-    <script src={{ url_for('statics', path='js/dashboard.js') }}></script>
+    <script src={{ url_for('statics', path='js/edit_comment.js') }}></script>
 {% endblock %}

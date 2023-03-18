@@ -84,3 +84,11 @@ class GetPost(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class UserCommentAction(BaseModel):
+    user_action: str
+
+
+class EditComment(BaseModel):
+    content: str

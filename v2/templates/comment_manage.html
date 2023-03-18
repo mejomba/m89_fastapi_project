@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %} مدیریت کامنت ها {% endblock %}
+
+{% block style %}
+    <style>
+        .post-img-thumbnail {
+            width: 16rem;
+            height: 9rem;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row my-5">
+            {% for comment in comments %}
+            <section class="col-md-4 col-12 align-items-center">
+            {% if comment.status == 'pending' %}
+                <article class="px-4 py-2 border my-1 shadow rounded">
+            {% else %}
+                <article class="px-4 py-2 border my-1 rounded">
+            {% endif %}
+
+                    <div class="d-flex justify-content-end">
+                    {% if comment.status == 'pending' %}
+                            <span class="badge text-bg-warning">{{ comment.status }}</span>
+                        {% elif comment.status == 'reject' %}
+                            <span class="badge text-bg-danger">{{ comment.status }}</span>
+                        {% elif comment.status == 'published' %}
+                             <span class="badge text-bg-success">{{ comment.status }}</span>
+                        {% endif %}
+                    </div>
+                        <p>{{ comment.content }}</p>
+                        <span class="ms-2">پست:</span><a href={{ url_for('get_post', id=comment.post_related.post_id) }}>{{ comment.post_related.title }}</a><br>
+                        <span class="ms-2">نویسنده:</span><span>{{ comment.user_related.first_name }} {{ comment.user_related.last_name }}</span><br>
+                        <span class="ms-2">آخرین ویرایش:</span><span>{{ comment.last_update.date() | to_jalali }}</span>
+
+                    {% if comment.status == 'pending' %}
+                        <form class="writer-request-form" action={{ url_for('comment_manage', comment_id=comment.comment_id) }}>
+                            <div class="d-flex justify-content-between mt-3">
+                                <div>
+                                    <button class="btn btn-outline-success confirm-comment" type="submit" >تایید</button>
+                                    <button class="btn btn-outline-danger reject-comment" type="submit" >رد </button>
+                                </div>
+                                <div>
+                                    <a class="btn btn-link" href={{ url_for('edit_comment', comment_id=comment.comment_id) }} >ویرایش</a>
+                                    <button class="btn btn-link text-danger delete-comment" type="submit" >حذف</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    {% endif %}
+                </article>
+            </section>
+            {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+    <script src={{ url_for('statics', path='js/comment_manage.js') }}></script>
+{% endblock %}
