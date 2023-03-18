@@ -1,7 +1,7 @@
 import os
 import datetime
 import shutil
-from fastapi import APIRouter, HTTPException, Depends, Request, status, FastAPI, UploadFile, File, Form
+from fastapi import APIRouter, HTTPException, Depends, Request, status, FastAPI, UploadFile, File, Form, Response
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
@@ -208,6 +208,7 @@ def delete_post(post_id: int,
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f'your not owner of this post')
 
+
 @router.get('/post/update/{post_id}')
 def update_post(request: Request,
                 post_id: int,
@@ -247,10 +248,101 @@ def update_post(post_id: int,
 
 
 @router.get('/dashboard/comment/manage')
-def get_comment_manage():
-    pass
+def comment_manage(request: Request,
+                   db: Session = Depends(get_db),
+                   current_user: models.auth.User = Depends(jwt_manager.get_current_user)):
+    if current_user.role == 'admin':
+        comments = db.query(models.posts.Comment).order_by(models.posts.Comment.status).all()
+        context = {'request': request, 'comments': comments, 'user': current_user}
+        return template.TemplateResponse('comment_manage.html', context)
+
+
+@router.post('/dashboard/comment/manage/{comment_id}', status_code=status.HTTP_206_PARTIAL_CONTENT)
+def comment_manage(request: Request,
+                   response: Response,
+                   comment_id: int,
+                   payload: schemas.posts.UserCommentAction,
+                   db: Session = Depends(get_db),
+                   current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                   ):
+
+    comment_query = db.query(models.posts.Comment).filter(models.posts.Comment.comment_id == comment_id)
+    comment = comment_query.first()
+
+    context = {'request': request, 'user': current_user}
+
+    if current_user.role == 'admin':
+
+        if not comment:
+            return template.TemplateResponse('404.html', context)
+        if payload.user_action == 'ok':
+            comment_query.update({'status': 'published', 'last_update': datetime.datetime.now()}, synchronize_session=False)
+            db.commit()
+            db.refresh(comment)
+            return comment
+
+        elif payload.user_action == 'reject':
+            comment_query.update({'status': 'reject', 'last_update': datetime.datetime.now()}, synchronize_session=False)
+            db.commit()
+            db.refresh(comment)
+            return comment
+
+        elif payload.user_action == 'delete':
+            print('delete')
+            comment_query.delete(synchronize_session=False)
+            db.commit()
+            response.status_code = status.HTTP_204_NO_CONTENT
+
+    elif comment and comment.user_id == current_user.user_id:
+        comment_query.delete(synchronize_session=False)
+        response.status_code = status.HTTP_204_NO_CONTENT
+    else:
+        print('inja')
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='شما صاحب این کامنت نیستید')
+
+
+@router.get('/dashboard/comment/edit/{comment_id}')
+def edit_comment(request: Request,
+                 comment_id: int,
+                 db: Session = Depends(get_db),
+                 current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                 ):
+    comment = db.query(models.posts.Comment).filter(models.posts.Comment.comment_id == comment_id).first()
+    context = {'request': request, 'user': current_user, 'comment': comment}
+    return template.TemplateResponse('edit_comment.html', context)
+
+
+@router.put('/dashboard/comment/edit/{comment_id}', status_code=status.HTTP_206_PARTIAL_CONTENT)
+def edit_comment(request: Request,
+                 response: Response,
+                 payload: schemas.posts.EditComment,
+                 comment_id: int,
+                 db: Session = Depends(get_db),
+                 current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                 ):
+    comment_query = db.query(models.posts.Comment).filter(models.posts.Comment.comment_id == comment_id)
+    comment = comment_query.first()
+
+    payload_dict = payload.dict()
+    payload_dict.update({'last_update': datetime.datetime.now()})
+
+    if comment and current_user.role == 'admin':
+        try:
+            comment_query.update(payload_dict, synchronize_session=False)
+            db.commit()
+        except Exception:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='خطا در ثبت')
+    elif comment and current_user.user_id == comment.user_id:
+        try:
+            comment_query.update(payload_dict, synchronize_session=False)
+            db.commit()
+        except Exception:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='خطا در ثبت')
+    else:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='شما مالک این کامنت نیستین')
 
 
 @router.get('/dashboard/post/manage')
-def get_post_manage():
+def post_manage():
     pass
