@@ -178,16 +178,20 @@ def get_all_comment(request: Request, db: Session = Depends(get_db)):
 @router.get('/comments/{user_name}', response_model=List[schemas.posts.ResponseComment])
 def get_all_comment_user(request: Request,
                          user_name: str,
-                         db: Session = Depends(get_db)):
+                         db: Session = Depends(get_db),
+                         current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                         ):
+    if not current_user:
+        return template.TemplateResponse('404.html', {'request': request})
+    # user = db.query(models.auth.User).filter(models.auth.User.username == user_name).first()
 
-    user = db.query(models.auth.User).filter(models.auth.User.username == user_name).first()
+    # if user is None:
+    #     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user {user_name} not found")
 
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user {user_name} not found")
+    # all_comment = db.query(models.posts.Comment).filter(models.posts.Comment.user_id == user.user_id).all()
+    all_comment = db.query(models.posts.Comment).filter(models.posts.Comment.user_id == current_user.user_id).all()
 
-    all_comment = db.query(models.posts.Comment).filter(models.posts.Comment.user_id == user.user_id).all()
-
-    context = {'request': request, 'comments': all_comment, 'user': user}
+    context = {'request': request, 'comments': all_comment, 'user': current_user}
     return template.TemplateResponse('users_comments.html', context)
 
 
@@ -295,6 +299,7 @@ def comment_manage(request: Request,
 
     elif comment and comment.user_id == current_user.user_id:
         comment_query.delete(synchronize_session=False)
+        db.commit()
         response.status_code = status.HTTP_204_NO_CONTENT
     else:
         print('inja')
@@ -327,6 +332,7 @@ def edit_comment(request: Request,
     payload_dict.update({'last_update': datetime.datetime.now()})
 
     if comment and current_user.role == 'admin':
+        payload_dict.update({'status': 'published'})
         try:
             comment_query.update(payload_dict, synchronize_session=False)
             db.commit()
@@ -334,6 +340,7 @@ def edit_comment(request: Request,
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='خطا در ثبت')
     elif comment and current_user.user_id == comment.user_id:
         try:
+            payload_dict.update({'status': 'pending'})
             comment_query.update(payload_dict, synchronize_session=False)
             db.commit()
         except Exception:

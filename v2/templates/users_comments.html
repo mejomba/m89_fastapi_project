@@ -12,24 +12,95 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="row my-5">
+<div class="container-fluid">
+<div class="row">
+    <div class="col-md-3">
+          <div class="sticky-top">
+              <ul class="list-group p-0 my-md-0 my-4">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href={{ url_for("user_profile") }}>پست های من</a>
+                    <span class="badge bg-primary rounded-pill">{{ user_posts | length }}</span>
+                  </li>
+
+                  {% if user.role != 'regular_user' %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("create_post") }} >ایجاد پست</a>
+                        <span class="badge bg-primary rounded-pill"></span>
+                      </li>
+                  {% endif %}
+
+                  {% if user.role == 'admin' %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("get_user_manage") }} >درخواست های کاربران</a>
+                        <span class="badge bg-primary rounded-pill"></span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("post_manage") }} >پست های در انتظار</a>
+                        <span class="badge bg-primary rounded-pill"></span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("comment_manage") }} >کامنت های در انتظار</a>
+                        <span class="badge bg-primary rounded-pill"></span>
+                      </li>
+                  {% endif %}
+
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href={{ url_for('get_all_comment_user', user_name=user.username) }} >کامنت های من</a>
+                    <span class="badge bg-primary rounded-pill">{{ comments | length }}</span>
+                  </li>
+              {% if user.role == 'regular_user' %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span role="button" id="request-writer">نویسنده شدن</span>
+                  </li>
+              {% endif %}
+            </ul>
+          </div>
+      </div>
+
+    <div class="col-md-9">
+        <div class="row ">
             {% for comment in comments %}
             <section class="col-md-4 col-12 align-items-center">
                 <article class="p-4 border my-1">
+
+                    <div class="d-flex justify-content-end">
+                        {% if comment.status == 'pending' %}
+                            <span class="badge text-bg-warning">{{ comment.status }}</span>
+                        {% elif comment.status == 'reject' %}
+                            <span class="badge text-bg-danger">{{ comment.status }}</span>
+                        {% elif comment.status == 'published' %}
+                             <span class="badge text-bg-success">{{ comment.status }}</span>
+                        {% endif %}
+                    </div>
 
                         <p>{{ comment.content }}</p>
                         <span class="ms-2">پست:</span><a href={{ url_for('get_post', id=comment.post_related.post_id) }}>{{ comment.post_related.title }}</a><br>
                         <span class="ms-2">نویسنده:</span><span>{{ comment.user_related.first_name }} {{ comment.user_related.last_name }}</span><br>
                         <span class="ms-2">آخرین ویرایش:</span><span>{{ comment.last_update.date() | to_jalali }}</span>
 
+
+                        <form class="writer-request-form" action={{ url_for('comment_manage', comment_id=comment.comment_id) }}>
+                            <div class="d-flex justify-content-between mt-3">
+                                <div>
+                                </div>
+                                <div>
+                                    <a class="btn btn-link" href={{ url_for('edit_comment', comment_id=comment.comment_id) }} >ویرایش</a>
+                                    <button class="btn btn-link text-danger delete-comment" type="submit" >حذف</button>
+                                </div>
+                            </div>
+                        </form>
+
+
                 </article>
             </section>
             {% endfor %}
         </div>
     </div>
-
+</div>
+</div>
 
 {% endblock %}
 
-{% block script %} {% endblock %}
+{% block script %}
+    <script src={{ url_for('statics', path='js/user_comments.js') }}></script>
+{% endblock %}
