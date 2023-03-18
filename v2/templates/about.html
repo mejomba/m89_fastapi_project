@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
+
+
 {% block style %}
-<link rel="stylesheet" href="../statics/css/about.css">{% endblock %}
+<link rel="stylesheet" href={{ url_for('statics', path="css/about.css") }}>{% endblock %}
+
+{% block title %}درباره ما{% endblock %}
+
 {% block content %}
 
     <div class="container">

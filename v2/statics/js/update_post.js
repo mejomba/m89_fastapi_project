@@ -1,15 +1,15 @@
-async function createPost(url="", token, data={}) {
+async function updatePost(url="", token, data={}) {
     const response = await fetch(url, {
-        method: "POST",
+        method: "PUT",
         headers: {
             "Content-Type": "application/json",
             'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify(data)
     })
-    if (response.status === 201) {
+    if (response.status === 206) {
         console.log('ثبت شد')
-        alertMessage.innerText = "پست با موفقیت ثب شد"
+        alertMessage.innerText = "پست با موفقیت بروز شد"
         userAlert.classList.add('alert-success');
         userAlert.classList.remove('alert-danger');
         userAlert.classList.remove('d-none');
@@ -29,7 +29,7 @@ async function createPost(url="", token, data={}) {
         userAlert.classList.add('alert-danger');
         userAlert.classList.remove('d-none');
         modal.classList.remove('open-modal');
-    }else {
+    } else {
         alertMessage.innerText = "خطا: فیلد های ورودی را چک کنید"
         userAlert.classList.add('alert-danger');
         userAlert.classList.remove('d-none');
@@ -38,20 +38,15 @@ async function createPost(url="", token, data={}) {
 }
 
 
-// create post
 
-// createPostForm = document.getElementById('create-post-form');
-// createPostForm.addEventListener('submit', function (e) {
-//     e.preventDefault()
-//     const newdata = new FormData($('#create-post-form')[0])
-//     convertImageToBase64(newdata.get('postimage'), console.log)
-//     const res = createPost(this.action, localStorage.getItem('access_token'), {
-//         title: newdata.get('posttitle'),
-//         content: newdata.get('postcontent'),
-//         image: {'image': 'salam'}
-//     })
-// });
-
-
+// update post
+createPostForm = document.getElementById('update-post-form');
+createPostForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    const res = updatePost(this.action, localStorage.getItem('access_token') ,  {
+        title: this.updateposttitle.value,
+        content: this.updatepostcontent.value,
+    })
+});
 
 

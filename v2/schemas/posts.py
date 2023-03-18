@@ -1,28 +1,8 @@
 from pydantic import BaseModel, root_validator, validator
 from datetime import datetime
 from fastapi import HTTPException, status, File, UploadFile
-from typing import Optional
+from typing import Optional, Dict
 
-
-
-
-from pydantic import BaseModel, validator
-class Computer(BaseModel):
-    brand: str
-    storage_type: str
-    ratings: list[int]
-
-    @validator("*", pre=True)
-    def uppercase_strings(cls, value):
-        if isinstance(value, str):
-            return value.upper()
-        return value
-
-    @validator("storage_type")
-    def check_storage_type(cls, value):
-        if value not in ("SSD", "HDD"):
-            raise ValueError("Storage type can only be SSD or HDD.")
-        return value
 
 class CommentBase(BaseModel):
     content: str
@@ -50,6 +30,25 @@ class User(BaseModel):
 class CreatePost(BaseModel):
     title: str
     content: str
+    image: Dict | None = None
+
+    @validator('title')
+    def validate_title(cls, v):
+        if not v:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='title and content required')
+        return v
+
+    @validator('content')
+    def validate_content(cls, v):
+        if not v:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='title and content required')
+        return v
+
+
+class updatePost(BaseModel):
+    title: str
+    content: str
+    # image: UploadFile(File(...)) = None
 
     @validator('*')
     def validate_title(cls, v):
@@ -76,11 +75,6 @@ class ResponseComment(BaseModel):
 
     class Config:
         orm_mode = True
-
-
-
-
-
 
 
 class GetPost(BaseModel):

@@ -26,6 +26,7 @@ class Post(BASE):
     post_id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
     content = Column(String, nullable=False)
+    image = Column(String, nullable=True)
     publish_date = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
     created_at = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
     last_update = Column(TIMESTAMP(timezone=True),nullable=False, server_default=text('now()'))
