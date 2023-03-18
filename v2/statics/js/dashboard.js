@@ -72,10 +72,21 @@ async function deletePostProcess(url="", data={}) {
     }
 }
 
-const deletePost = document.getElementById('delete-post');
-if (deletePost){
+const deletePostBtns = document.querySelectorAll('.delete-post');
+console.log(deletePostBtns)
+if (deletePostBtns){
+    deletePostBtns.forEach(function (deletePost) {
+        console.log(deletePost)
     deletePost.addEventListener('click', function (e){
         e.preventDefault()
-    const res = deletePostProcess(e.currentTarget.parentElement.action, {})
+        const res = deletePostProcess(deletePost.parentElement.action, {})
+    })
 })
 }
+
+// if (deletePost){
+//     deletePost.addEventListener('click', function (e){
+//         e.preventDefault()
+//     const res = deletePostProcess(e.currentTarget.parentElement.action, {})
+// })
+// }

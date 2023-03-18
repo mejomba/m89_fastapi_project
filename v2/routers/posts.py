@@ -1,6 +1,7 @@
+import os
 import datetime
 import shutil
-from fastapi import APIRouter, HTTPException, Depends, Request, status, FastAPI, UploadFile, File
+from fastapi import APIRouter, HTTPException, Depends, Request, status, FastAPI, UploadFile, File, Form
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
@@ -10,6 +11,7 @@ import schemas, models
 from database_manager import get_db
 import schemas.posts
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 router = APIRouter(tags=['posts'])
 template = Jinja2Templates(directory='templates')
@@ -25,37 +27,71 @@ def home_page(request: Request,
 
 
 @router.get('/post')
-def create_post(request: Request, current_user: models.auth.User | None = Depends(jwt_manager.get_current_user)):
+def create_post(request: Request, current_user: models.auth.User = Depends(jwt_manager.get_current_user)):
     """get create post form"""
 
     context = {'request': request, 'user': current_user}
     return template.TemplateResponse('create_post.html', context)
 
 
-@router.post('/post', response_model=schemas.posts.ResponsePost | None, status_code=status.HTTP_201_CREATED)
-def create_post(payload: schemas.posts.CreatePost,
-                db: Session = Depends(get_db),
-                current_user: models.auth.User = Depends(jwt_manager.get_current_user)
-                ):
-    """create new post depends on login user"""
+# @router.post('/post', response_model=schemas.posts.ResponsePost | None, status_code=status.HTTP_201_CREATED)
+# def create_post(payload: schemas.posts.CreatePost,
+#                 db: Session = Depends(get_db),
+#                 current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+#                 ):
+#     """create new post depends on login user"""
+#     print(payload)
+#     if not current_user:
+#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='you must be login')
+#
+#     payload_dict = payload.dict()
+#
+#     if current_user.role == "admin":
+#         payload_dict.update({'status': 'published', 'user_id': current_user.user_id})
+#     elif current_user.role == "writer":
+#         payload_dict.update({'status': 'pending', 'user_id': current_user.user_id})
+#     else:
+#         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='access denied')
 
-    if not current_user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='you must be login')
+    # new_post = models.posts.Post(**payload_dict)
+    # db.add(new_post)
+    # db.commit()
+    # db.refresh(new_post)
+    # return new_post
 
-    payload_dict = payload.dict()
 
+import shutil
+@router.post("/post", status_code=status.HTTP_201_CREATED)
+async def create_post(request: Request,
+                      post_title: str = Form(...),
+                      post_content: str = Form(...),
+                      post_image: UploadFile = File(...),
+                      db: Session = Depends(get_db),
+                      current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                      ):
+    image_url = f'/statics/images/upload/post/{post_image.filename}'
+    with open(f'{BASE_DIR}{image_url}', "wb") as buffer:
+        shutil.copyfileobj(post_image.file, buffer)
+
+    payload_dict = {}
     if current_user.role == "admin":
         payload_dict.update({'status': 'published', 'user_id': current_user.user_id})
     elif current_user.role == "writer":
         payload_dict.update({'status': 'pending', 'user_id': current_user.user_id})
     else:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='access denied')
+        context = {'request': request, 'user': current_user, 'status': status.HTTP_403_FORBIDDEN}
+        return template.TemplateResponse('create_post.html', context)
 
-    new_post = models.posts.Post(**payload_dict)
-    db.add(new_post)
-    db.commit()
-    db.refresh(new_post)
-    return new_post
+    try:
+        new_post = models.posts.Post(**payload_dict, title=post_title, content=post_content, image=image_url)
+        db.add(new_post)
+        db.commit()
+        db.refresh(new_post)
+        context = {'request': request, 'user': current_user, 'status': status.HTTP_201_CREATED}
+        return template.TemplateResponse('create_post.html', context)
+    except Exception:
+        context = {'request': request, 'user': current_user, 'status': status.HTTP_500_INTERNAL_SERVER_ERROR}
+        return template.TemplateResponse('create_post.html', context)
 
 
 @router.get("/posts/{id}", response_model=Dict)
@@ -166,16 +202,33 @@ def delete_post(post_id: int,
     if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='post not found')
     else:
-        if post.user_id == current_user.user_id:
+        if post.user_id == current_user.user_id or current_user.role == 'admin':
             post_query.delete(synchronize_session=False)
             db.commit()
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f'your not owner of this post')
 
+@router.get('/post/update/{post_id}')
+def update_post(request: Request,
+                post_id: int,
+                db: Session = Depends(get_db),
+                current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                ):
+    post = db.query(models.posts.Post).filter(models.posts.Post.post_id == post_id).first()
 
-@router.put('/posts/update/{post_id}', status_code=status.HTTP_206_PARTIAL_CONTENT)
+    if not post:
+        return template.TemplateResponse('404.html', {'request': request})
+
+    if not post.user_id == current_user.user_id:
+        return template.TemplateResponse('404.html', {'request': request})
+
+    context = {'request': request, 'post': post, 'user': current_user}
+    return template.TemplateResponse('update_post.html', context)
+
+
+@router.put('/post/update/{post_id}', status_code=status.HTTP_206_PARTIAL_CONTENT)
 def update_post(post_id: int,
-                payload: schemas.posts.CreatePost,
+                payload: schemas.posts.updatePost,
                 db: Session = Depends(get_db),
                 current_user: models.auth.User = Depends(jwt_manager.get_current_user)
                 ):

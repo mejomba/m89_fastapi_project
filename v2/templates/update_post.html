@@ -4,6 +4,23 @@
 
 {% block style %} {% endblock %}
 
+{% block header %}
+    {% if user %}
+        <a href={{ url_for('user_profile') }} class="btn btn-outline-primary me-3" >
+            پروفایل
+        </a>
+        <a href={{ url_for('user_logout') }}  class="btn btn-outline-danger me-3">
+            خروج
+        </a>
+        <button class="modal-btn d-none"></button>`
+    {% else %}
+        <button class="btn btn-outline-primary me-3 modal-btn">
+            ورود یا ثبت نام
+        </button>
+    {% endif %}
+
+{% endblock %}
+
 {% block login_modal %}
 
     {% if user %}
@@ -75,65 +92,46 @@
       </div>
 {% endblock %}
 
-
 {% block content %}
-    <div id="result">
-    salam
+
+{% if user %}
+    <div class="container-fluid">
+      <div class="row">
+      <div class="col-md-12">
+
+      {% set dashboard_url = url_for('user_profile')  %}
+
+      {% if request.url == dashboard_url %}
+          <h2 class="text-center bg-info text-white py-2 sticky-top">پست ها من</h2>
+      {% endif %}
+
+
+            <div class="container">
+                <h2 class="text-center bg-info p-2">ویرایش پست</h2>
+                <form class="row g-3 my-5 border border-rounded shadow-lg p-2" method="POST" action={{ url_for('update_post', post_id=post.post_id) }} id="update-post-form" >
+                <div class="mb-3">
+                  <input type="text" class="form-control" id="postTitle" name="updateposttitle" placeholder="عنوان پست" value={{ post.title }}>
+                </div>
+                <div class="mb-3">
+                  <textarea class="form-control" id="postContent" name="updatepostcontent" rows="6" placeholder="متن پست">{{ post.content }}</textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary mb-3">ارسال پست</button>
+            </form>
+            </div>
+
+      </div>
+
+
+
+      </div>
     </div>
-{% if user.role == 'admin' or user.role == 'writer' %}
-    <div class="container">
-    <form class="row g-3 my-5 border border-rounded shadow-lg p-2" method="POST" enctype="multipart/form-data" action={{ url_for('create_post') }} >
-        <div class="mb-3">
-          <input type="text" class="form-control" id="postTitle" name="post_title" placeholder="عنوان پست">
-        </div>
-        <div class="mb-3">
-          <textarea class="form-control" id="postContent" name="post_content" rows="6" placeholder="متن پست"></textarea>
-        </div>
-        <div class="mb-3">
-          <label for="file" class="from-label">تصویر</label>
-          <input type="file" class="form-control" id="postimage" name="post_image">
-        </div>
-
-        <button type="submit" class="btn btn-primary mb-3">ارسال پست</button>
-    </form>
-    </div>
-
-
-
 {% else %}
-<h1 class="text-center text-danger bg-warning p-4">برای دسترسی به این صفحه باید نویسنده باشید</h1>
-
+    <h1 class="text-center text-danger bg-warning p-4">برای دسترسی به این صفحه باید وارد شوید</h1>
 {% endif %}
 {% endblock %}
 
 
 {% block script %}
-<script src="../statics/js/create_post.js"></script>
-    {% if status == 201 %}
-        <script>
-            alertMessage.innerText = "پست با موفقیت ثبت شد"
-            userAlert.classList.add('alert-success');
-            userAlert.classList.remove('alert-danger');
-            userAlert.classList.remove('d-none');
-            modal.classList.remove('open-modal');
-        </script>
-    {% elif status == 500 %}
-        <script>
-            alertMessage.innerText = "خطای ناشناخته 500"
-            userAlert.classList.add('alert-danger');
-            userAlert.classList.remove('alert-success');
-            userAlert.classList.remove('d-none');
-            modal.classList.remove('open-modal');
-        </script>
-    {% elif status == 403 %}
-        <script>
-            alertMessage.innerText = "شما به این صفحه دسترسی ندارید"
-            userAlert.classList.add('alert-danger');
-            userAlert.classList.remove('alert-success');
-            userAlert.classList.remove('d-none');
-            modal.classList.remove('open-modal');
-        </script>
-    {% endif %}
-
-
+    <script src={{ url_for('statics', path='js/update_post.js') }}></script>
 {% endblock %}
