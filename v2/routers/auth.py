@@ -159,18 +159,24 @@ def change_user_role(
 
 
 @router.delete('/users_manage/delete/{user_id}', status_code=status.HTTP_204_NO_CONTENT)
-def delete_user(user_id: int,
+def delete_user(request: Request,
+                response: Response,
+                user_id: int,
                 db: Session = Depends(get_db),
                 current_user: models.auth.User = Depends(jwt_manager.get_current_user)
                 ):
     user_query = db.query(models.auth.User).filter(models.auth.User.user_id == user_id)
     user = user_query.first()
 
+    context = {'request': request, 'user': current_user}
+
     if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='user not found')
+        return template.TemplateResponse('404.html', context)
+        # raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='user not found')
     else:
         if user.user_id == current_user.user_id or current_user.role == 'admin':
             user_query.delete(synchronize_session=False)
             db.commit()
+            RedirectResponse.delete_cookie(response, key='access_token')
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f'you are not admin')
