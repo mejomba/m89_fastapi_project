@@ -1,6 +1,7 @@
 from fastapi import status, HTTPException, Request, Depends, APIRouter, Cookie, Response
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
+from sqlalchemy import desc
 from sqlalchemy.exc import IntegrityError
 from fastapi.templating import Jinja2Templates
 from psycopg2.errors import UniqueViolation
@@ -88,7 +89,10 @@ def user_profile(request: Request,
                  current_user: models.auth.User = Depends(jwt_manager.get_current_user)
                  ):
     if current_user:
-        user_posts = db.query(models.posts.Post).filter(models.posts.Post.user_id == current_user.user_id).all()
+        user_posts = db.query(models.posts.Post)\
+            .filter(models.posts.Post.user_id == current_user.user_id)\
+            .order_by(desc(models.posts.Post.publish_date)).all()
+
         comments = db.query(models.posts.Comment).filter(models.posts.Comment.user_id == current_user.user_id).all()
         context = {'request': request, "user": current_user, "user_posts": user_posts, 'comments': comments}
         return template.TemplateResponse('dashboard.html', context=context)

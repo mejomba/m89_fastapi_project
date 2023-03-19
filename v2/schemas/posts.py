@@ -30,7 +30,7 @@ class User(BaseModel):
 class CreatePost(BaseModel):
     title: str
     content: str
-    image: str
+    image: str | None = None
 
     @validator('title')
     def validate_title(cls, v):
@@ -45,16 +45,16 @@ class CreatePost(BaseModel):
         return v
 
 
-class updatePost(BaseModel):
-    title: str
-    content: str
-    # image: UploadFile(File(...)) = None
-
-    @validator('*')
-    def validate_title(cls, v):
-        if not v:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='title and content required')
-        return v
+# class updatePost(BaseModel):
+#     title: str
+#     content: str
+#     image: str | None = None
+#
+#     @validator('*')
+#     def validate_title(cls, v):
+#         if not v:
+#             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='title and content required')
+#         return v
 
 
 class updateComment(BaseModel):

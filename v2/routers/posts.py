@@ -14,8 +14,9 @@ import schemas, models
 from database_manager import get_db
 import schemas.posts
 import jalali_date
+from settings import BASE_DIR
+from utils import save_image
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 router = APIRouter(tags=['posts'])
 template = Jinja2Templates(directory='templates')
@@ -26,6 +27,7 @@ def home_page(request: Request,
               db: Session = Depends(get_db),
               current_user: models.auth.User | None = Depends(jwt_manager.get_current_user)):
     last_post = db.query(models.posts.Post).filter(models.posts.Post.status == 'published').order_by(desc(models.posts.Post.last_update)).limit(10)
+    print(last_post[0].image)
     context = {'request': request, 'posts': last_post, 'user': current_user}
     return template.TemplateResponse('home.html', context)
 
@@ -55,38 +57,29 @@ def create_post(request: Request,
         return template.TemplateResponse('create_post.html', context)
 
     payload_dict = payload.dict()
-
-    try:
-        pattern = r'.*\/(\w+);.*'
-        image_data = payload.image.split(',')
-        image_type = image_data[0]
-        image_type = re.search(pattern, image_type).group(1)
-        base64_image = image_data[1]
-        base64_image_to_byte = base64_image.encode('utf-8')
-        image_name = jalali_date.Gregorian(datetime.datetime.now().date()).persian_string("{}_{}_{}")
-        image_url = f'/statics/images/upload/post/{image_name}_{time.time()}.{image_type}'
-
-        with open(f'{BASE_DIR}{image_url}', 'wb') as file:
-            decoded_base64_image = base64.decodebytes(base64_image_to_byte)
-            file.write(decoded_base64_image)
-
-        if current_user.role == "admin":
-            payload_dict.update({'status': 'published', 'user_id': current_user.user_id, 'image': image_url})
-        elif current_user.role == "writer":
-            payload_dict.update({'status': 'pending', 'user_id': current_user.user_id, 'image': image_url})
-        else:
-            response.status_code = status.HTTP_403_FORBIDDEN
+    if image := payload.image:
+        try:
+            image_url = save_image(image)
+        except Exception:
+            response.status_code = status.HTTP_406_NOT_ACCEPTABLE
             return
+    else:
+        image_url = f'/statics/images/upload/post/no_image.png'
 
-    except Exception:
-        response.status_code = status.HTTP_406_NOT_ACCEPTABLE
+    if current_user.role == "admin":
+        payload_dict.update({'status': 'published', 'user_id': current_user.user_id, 'image': image_url})
+    elif current_user.role == "writer":
+        payload_dict.update({'status': 'pending', 'user_id': current_user.user_id, 'image': image_url})
+    else:
+        response.status_code = status.HTTP_403_FORBIDDEN
         return
 
     try:
+        print(payload_dict)
         new_post = models.posts.Post(**payload_dict)
+        print(new_post.image)
         db.add(new_post)
         db.commit()
-        db.refresh(new_post)
     except Exception:
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
@@ -255,7 +248,7 @@ def update_post(request: Request,
     if not post:
         return template.TemplateResponse('404.html', {'request': request})
 
-    if not post.user_id == current_user.user_id:
+    if post.user_id != current_user.user_id:
         return template.TemplateResponse('404.html', {'request': request})
 
     context = {'request': request, 'post': post, 'user': current_user}
@@ -263,8 +256,9 @@ def update_post(request: Request,
 
 
 @router.put('/post/update/{post_id}', status_code=status.HTTP_206_PARTIAL_CONTENT)
-def update_post(post_id: int,
-                payload: schemas.posts.updatePost,
+def update_post(response: Response,
+                post_id: int,
+                payload: schemas.posts.CreatePost,
                 db: Session = Depends(get_db),
                 current_user: models.auth.User = Depends(jwt_manager.get_current_user)
                 ):
@@ -272,12 +266,31 @@ def update_post(post_id: int,
     post_query = db.query(models.posts.Post).filter(models.posts.Post.post_id == post_id)
     post = post_query.first()
 
-    if post is not None and post.user_id == current_user.user_id:
+    if post and (post.user_id == current_user.user_id or current_user.role == 'admin'):
+        if image := payload.image:
+            try:
+                image_url = save_image(image)
+            except Exception:
+                response.status_code = status.HTTP_406_NOT_ACCEPTABLE
+                return
+        else:
+            image_url = f'/statics/images/upload/post/no_image.png'
+
         payload_dict = payload.dict()
-        payload_dict.update({"last_update": datetime.datetime.now()})
-        post_query.update(payload_dict, synchronize_session=False)
-        db.commit()
-        return post_query.first()
+
+        if current_user.role == "admin":
+            payload_dict.update({'status': 'published', 'user_id': current_user.user_id, 'image': image_url})
+        elif current_user.role == "writer":
+            payload_dict.update({'status': 'pending', 'user_id': current_user.user_id, 'image': image_url})
+        else:
+            response.status_code = status.HTTP_403_FORBIDDEN
+            return
+
+        try:
+            post_query.update(payload_dict, synchronize_session=False)
+            db.commit()
+        except Exception:
+            response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='post not found')
 
