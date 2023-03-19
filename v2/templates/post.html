@@ -2,11 +2,19 @@
 
 {% block title %} {% endblock %}
 
-{% block style %} {% endblock %}
+{% block style %}
+    <link rel="stylesheet" href={{ url_for('statics', path='css/post.css') }}/>
+{% endblock %}
 {% block head_script %} {% endblock %}
 {% block content %}
 
+    <div class="container-fluid" id="image-post-header">
+        <div class="text-center ">
+            <img src="{{ post.image }}" alt="" style="object-fit: cover; width: 50%;">
+        </div>
+    </div>
     <section class="container mt-5">
+
     <article class="p-3">
         <h1 class="my-5">{{ post.title }}</h1>
         <P class="my-5">{{ post.content }}</P>
