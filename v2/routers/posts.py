@@ -350,6 +350,24 @@ def edit_comment(request: Request,
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='شما مالک این کامنت نیستین')
 
 
+@router.delete('/users_comments/delete/{comment_id}', status_code=status.HTTP_204_NO_CONTENT)
+def delete_comment(comment_id: int,
+                db: Session = Depends(get_db),
+                current_post: models.posts.Post = Depends(jwt_manager.get_current_user),
+                current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                ):
+    comment_query = db.query(models.posts.Comment).filter(models.posts.Comment.comment_id == comment_id)
+    comment = comment_query.first()
+
+    if comment is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='comment not found')
+    else:
+        if comment.post_id == current_post.post_id or current_user.role == 'admin':
+            comment_query.delete(synchronize_session=False)
+            db.commit()
+        else:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='you are not owner of this comment')
+
 @router.get('/dashboard/post/manage')
 def post_manage():
     pass
