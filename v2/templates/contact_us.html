@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ super() }} home {% endblock %}
+
+{% block style %}
+  <link rel="stylesheet" href="../statics/css/contact_us.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row align-items-center m-2">
+    <div class="col-md-6 my-5">
+      <h2 class="h1-responsive font-weight-bold text-center my-4">ارتباط با ما</h2>
+      <p class="text-center w-responsive mx-auto mb-5">آیا هیچ سوالی دارید؟ لطفا در تماس مستقیم با ما دریغ نکنید. تیم ما در عرض چند ساعت به شما مراجعه خواهد کرد تا به شما کمک کند.</p>
+      <br></br>
+        <form>
+          <div class="mb-3 ">
+            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="نام ">
+          </div>
+          <br></br>
+          <div class="mb-3">
+            <input type="email" class="form-control" id="exampleInput3" placeholder="ایمیل">
+          </div>
+          <br></br>
+          <div class="md-3">
+            <textarea type="text" class="form-control" id="message" cols="30" rows="10" placeholder="نظرات و انتقادات شما:"></textarea>
+          </div>
+          <br></br>
+          <button type="submit" class="btn btn-primary">ارسال نظر</button>
+        </form>
+    </div>
+
+    <div class="col-md-6 text-center">
+      <ul class="list-unstyled">
+          <li class="my-2">
+              <div class="d-flex justify-content-center align-items-center">
+                  <img src="../statics/images/address.svg" width="24" alt="address" class="ms-3">
+                  <span>تهران-میدان انقلاب</span>
+              </div>
+          </li>
+          <li class="my-2">
+              <div class="d-flex justify-content-center align-items-center">
+                  <img src="../statics/images/telephone.svg" width="24" alt="telephone" class="ms-3">
+                  <span>021-4455132</span>
+              </div>
+          </li>
+          <li class="my-2">
+              <div class="d-flex justify-content-center align-items-center">
+                  <img src="../statics/images/email.svg" width="24" alt="email" class="ms-3">
+                  <span>contact@email.com</span>
+              </div>
+          </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block script %} {% endblock %}

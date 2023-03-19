@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} گشتم نبود، نگرد نیست {% endblock %}
+
+{% block style %}
+    <style>
+        .post-img-thumbnail {
+            width: 16rem;
+            height: 9rem;
+        }
+        .image-404{
+            height: 100vh;
+            position: relative;
+            text-align: center;
+        }
+        .text-404 {
+            position: absolute;
+            top: 50px;
+            right: 50%;
+            transform: translate(50%, 50%);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <section class="container-fluid text-center">
+        <img  alt="not found" class="image-404" src={{ url_for('statics', path='images/error_404.svg') }}>
+        <h1 class="text-404 display-3">صفحه پیدا نشد 404</h1>
+    </section>
+{% endblock %}
+
+{% block script %} {% endblock %}

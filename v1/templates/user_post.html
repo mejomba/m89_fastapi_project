@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ super() }} home {% endblock %}
+
+{% block style %}
+    <style>
+        .post-img-thumbnail {
+            width: 16rem;
+            height: 9rem;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% for post in all_user_posts %}
+    <section class="container">
+        <article class="d-flex align-items-center">
+            <div class="p-5">
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.content | truncate(200) }}</p>
+                <a class="btn btn-outline-info" href={{ url_for('get_post', id=post.post_id) }} >مطالعه بیشتر</a>
+            </div>
+        </article>
+    </section>
+    {% endfor %}
+
+{% endblock %}
+
+{% block script %} {% endblock %}

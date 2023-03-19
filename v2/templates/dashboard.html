@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block title %} {% endblock %}
+
+{% block style %} {% endblock %}
+
+{% block header %}
+    {% if user %}
+        <a href={{ url_for('user_profile') }} class="btn btn-outline-primary me-3" >
+            پروفایل
+        </a>
+        <a href={{ url_for('user_logout') }}  class="btn btn-outline-danger me-3">
+            خروج
+        </a>
+        <button class="modal-btn d-none"></button>`
+    {% else %}
+        <button class="btn btn-outline-primary me-3 modal-btn">
+            ورود یا ثبت نام
+        </button>
+    {% endif %}
+
+{% endblock %}
+
+{% block login_modal %}
+
+    {% if user %}
+        <div class="modal-overlay">
+    {% else %}
+        <div class="modal-overlay open-modal">
+    {% endif %}
+        <div class="modal-container">
+            <div class="d-flex w-100">
+                <div class="bg-info d-flex w-100 align-items-center justify-content-center" id="login">
+                    <span>ورود</span>
+                </div>
+                <div class="d-flex w-100 align-items-center justify-content-center" id="signup">
+                    <span>ثبت نام</span>
+                </div>
+            </div>
+            <div id="login-form-wrapper" class="my-4">
+                <form action="/login" method="POST" id="login-form" class="w-100 p-4">
+                  <div class="form-floating mb-3">
+                      <input type="email" class="form-control" id="loginFloatingInput" name="email" placeholder="name@example.com" required>
+                      <label for="loginFloatingInput">ایمیل</label>
+                  </div>
+                  <div class="form-floating">
+                      <input type="password" class="form-control" id="loginFloatingPassword" name="password" placeholder="Password" required>
+                      <label for="loginFloatingPassword">Password</label>
+                  </div>
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary my-3 px-3">وارد شدن</button>
+                    </div>
+            </form>
+            </div>
+
+            <div id="signup-form-wrapper" class="d-none my-4">
+                <form action="/users" method="POST" id="signup-form" class="w-100 p-4">
+                  <div class="form-floating mb-3">
+                      <input type="email" class="form-control" id="signupFloatingInput" name="email" placeholder="name@example.com" required>
+                      <label for="signupFloatingInput">ایمیل</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="signupFloatingusername" name="username" placeholder="نام کاربری" required>
+                      <label for="signupFloatingusername">نام کاربری</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="password" class="form-control" id="signupFloatingPassword1" name="password" placeholder="رمز عبور" required>
+                      <label for="signupFloatingPassword1">رمز عبور</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="signupFloatingFirstName" name="first_name" placeholder="نام" required>
+                      <label for="signupFloatingFirstName">نام</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="signupFloatingLastName" name="last_name" placeholder="نام خانوادگی" required>
+                      <label for="signupFloatingLastName">نام خانوادگی</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="signupFloatinPhone" name="phone" placeholder="شماره تلفن">
+                      <label for="signupFloatingPhone">شماره تلفن</label>
+                  </div>
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary my-3 px-3">ثبت نام</button>
+                    </div>
+            </form>
+            </div>
+
+          <button class="close-btn">
+              &times;
+          </button>
+        </div>
+      </div>
+{% endblock %}
+
+{% block content %}
+
+{% if user %}
+    <div class="container-fluid">
+      <div class="row">
+
+          <div class="col-md-3">
+          <div class="sticky-top">
+              <ul class="list-group p-0 my-md-0 my-4">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href={{ url_for("user_profile") }}>پست های من</a>
+                    <span class="badge bg-primary rounded-pill">{{ user_posts | length }}</span>
+                  </li>
+
+                  {% if user.role != 'regular_user' %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("create_post") }} >ایجاد پست</a>
+                        <span class="badge bg-primary rounded-pill"></span>
+                      </li>
+                  {% endif %}
+
+                  {% if user.role == 'admin' %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("get_user_manage") }} >درخواست های کاربران</a>
+                        <span class="badge bg-primary rounded-pill"></span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("post_manage") }} >پست های در انتظار</a>
+                        <span class="badge bg-primary rounded-pill"></span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("comment_manage") }} >کامنت های در انتظار</a>
+                        <span class="badge bg-primary rounded-pill"></span>
+                      </li>
+                  {% endif %}
+
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href={{ url_for('get_all_comment_user', user_name=user.username) }} >کامنت های من</a>
+                    <span class="badge bg-primary rounded-pill">{{ comments | length }}</span>
+                  </li>
+              {% if user.role == 'regular_user' %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span role="button" id="request-writer">نویسنده شدن</span>
+                  </li>
+              {% endif %}
+            </ul>
+          </div>
+      </div>
+
+
+      <div class="col-md-9">
+      <div class="row">
+      {% set dashboard_url = url_for('user_profile')  %}
+
+      {% if request.url == dashboard_url %}
+          <h2 class="text-center bg-info text-white py-2 sticky-top">پست ها من</h2>
+      {% endif %}
+
+          {% for user_post in user_posts %}
+
+          <div class="col-xl-12 col-xxl-4 col-12">
+            <div class="card mb-3 mx-auto" style="max-width: 540px;">
+                <div class="col-md-12">
+                      <img width="100%" src={{ user_post.image }} alt="image">
+                  </div>
+              <div class="row g-0">
+
+                  <div class="col-md-12">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ user_post.title }}</h5>
+                        <hr>
+                      <p class="card-text">{{ user_post.content | truncate(150) }}</p>
+                      <p class="card-text"><small class="text-muted">
+                          <span>آخرین آپدیت:</span>
+                          <span class="last-update">
+                              {{ user_post.last_update.date() | to_jalali}}
+                          </span>
+                      </small></p>
+                        <a class="btn btn-outline-info" href={{ url_for('get_post', id=user_post.post_id) }} >مطالعه بیشتر</a>
+                        <div class="d-flex justify-content-end mt-2">
+                            <a class="text-info btn btn-link" href={{ url_for('update_post', post_id=user_post.post_id) }} >ویرایش</a>
+                            <form action={{ url_for('delete_post', post_id=user_post.post_id) }}>
+                                <button class="text-danger btn btn-link delete-post">حذف</button>
+                            </form>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+
+      </div>
+
+      </div>
+    </div>
+{% else %}
+    <h1 class="text-center text-danger bg-warning p-4">برای دسترسی به این صفحه باید وارد شوید</h1>
+{% endif %}
+{% endblock %}
+
+
+{% block script %}
+    <script src={{ url_for('statics', path='js/dashboard.js') }}></script>
+{% endblock %}

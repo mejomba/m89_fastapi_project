@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %} {% endblock %}
+
+{% block style %} {% endblock %}
+
+{% block login_modal %}
+
+    {% if user %}
+        <div class="modal-overlay">
+    {% else %}
+        <div class="modal-overlay open-modal">
+    {% endif %}
+        <div class="modal-container">
+            <div class="d-flex w-100">
+                <div class="bg-info d-flex w-100 align-items-center justify-content-center" id="login">
+                    <span>ورود</span>
+                </div>
+                <div class="d-flex w-100 align-items-center justify-content-center" id="signup">
+                    <span>ثبت نام</span>
+                </div>
+            </div>
+            <div id="login-form-wrapper" class="my-4">
+                <form action="/login" method="POST" id="login-form" class="w-100 p-4">
+                  <div class="form-floating mb-3">
+                      <input type="email" class="form-control" id="loginFloatingInput" name="email" placeholder="name@example.com" required>
+                      <label for="loginFloatingInput">ایمیل</label>
+                  </div>
+                  <div class="form-floating">
+                      <input type="password" class="form-control" id="loginFloatingPassword" name="password" placeholder="Password" required>
+                      <label for="loginFloatingPassword">Password</label>
+                  </div>
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary my-3 px-3">وارد شدن</button>
+                    </div>
+            </form>
+            </div>
+
+            <div id="signup-form-wrapper" class="d-none my-4">
+                <form action="/users" method="POST" id="signup-form" class="w-100 p-4">
+                  <div class="form-floating mb-3">
+                      <input type="email" class="form-control" id="signupFloatingInput" name="email" placeholder="name@example.com" required>
+                      <label for="signupFloatingInput">ایمیل</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="signupFloatingusername" name="username" placeholder="نام کاربری" required>
+                      <label for="signupFloatingusername">نام کاربری</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="password" class="form-control" id="signupFloatingPassword1" name="password" placeholder="رمز عبور" required>
+                      <label for="signupFloatingPassword1">رمز عبور</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="signupFloatingFirstName" name="first_name" placeholder="نام" required>
+                      <label for="signupFloatingFirstName">نام</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="signupFloatingLastName" name="last_name" placeholder="نام خانوادگی" required>
+                      <label for="signupFloatingLastName">نام خانوادگی</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="signupFloatinPhone" name="phone" placeholder="شماره تلفن">
+                      <label for="signupFloatingPhone">شماره تلفن</label>
+                  </div>
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary my-3 px-3">ثبت نام</button>
+                    </div>
+            </form>
+            </div>
+
+          <button class="close-btn">
+              &times;
+          </button>
+        </div>
+      </div>
+{% endblock %}
+
+
+{% block content %}
+    <div id="result">
+    salam
+    </div>
+{% if user.role == 'admin' or user.role == 'writer' %}
+    <div class="container">
+    <form class="row g-3 my-5 border border-rounded shadow-lg p-2" method="POST" enctype="multipart/form-data" action={{ url_for('create_post') }} >
+        <div class="mb-3">
+          <input type="text" class="form-control" id="postTitle" name="post_title" placeholder="عنوان پست">
+        </div>
+        <div class="mb-3">
+          <textarea class="form-control" id="postContent" name="post_content" rows="6" placeholder="متن پست"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="file" class="from-label">تصویر</label>
+          <input type="file" class="form-control" id="postimage" name="post_image">
+        </div>
+
+        <button type="submit" class="btn btn-primary mb-3">ارسال پست</button>
+    </form>
+    </div>
+
+
+
+{% else %}
+<h1 class="text-center text-danger bg-warning p-4">برای دسترسی به این صفحه باید نویسنده باشید</h1>
+
+{% endif %}
+{% endblock %}
+
+
+{% block script %}
+<script src="../statics/js/create_post.js"></script>
+    {% if status == 201 %}
+        <script>
+            alertMessage.innerText = "پست با موفقیت ثبت شد"
+            userAlert.classList.add('alert-success');
+            userAlert.classList.remove('alert-danger');
+            userAlert.classList.remove('d-none');
+            modal.classList.remove('open-modal');
+        </script>
+    {% elif status == 500 %}
+        <script>
+            alertMessage.innerText = "خطای ناشناخته 500"
+            userAlert.classList.add('alert-danger');
+            userAlert.classList.remove('alert-success');
+            userAlert.classList.remove('d-none');
+            modal.classList.remove('open-modal');
+        </script>
+    {% elif status == 403 %}
+        <script>
+            alertMessage.innerText = "شما به این صفحه دسترسی ندارید"
+            userAlert.classList.add('alert-danger');
+            userAlert.classList.remove('alert-success');
+            userAlert.classList.remove('d-none');
+            modal.classList.remove('open-modal');
+        </script>
+    {% endif %}
+
+
+{% endblock %}
