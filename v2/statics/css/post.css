@@ -1,0 +1,4 @@
+#image-post-header {
+    background: rgb(175,181,232);
+    background: linear-gradient(90deg, rgba(175,181,232,1) 5%, rgba(86,86,224,1) 50%, rgba(175,181,232,1) 95%);
+}
