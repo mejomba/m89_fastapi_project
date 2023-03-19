@@ -88,8 +88,8 @@
           <textarea class="form-control" id="postContent" name="post_content" rows="6" placeholder="متن پست" required></textarea>
         </div>
         <div class="mb-3">
-          <label for="file" class="from-label">تصویر</label>
-          <input type="file" class="form-control" id="postimage" name="post_image" required>
+          <label for="file" class="from-label mb-1">تصویر (نسبت ۱۶:۹ پیشنهاد میشود)</label>
+          <input type="file" class="form-control" id="postimage" name="create_post_image" >
         </div>
 
         <button type="submit" class="btn btn-primary mb-3">ارسال پست</button>
@@ -103,7 +103,7 @@
 
 
 {% block script %}
-<script src="../statics/js/create_post.js"></script>
+<script src={{ url_for('statics', path='js/create_post.js') }}></script>
     {% if status == 201 %}
         <script>
             alertMessage.innerText = "پست با موفقیت ثبت شد"

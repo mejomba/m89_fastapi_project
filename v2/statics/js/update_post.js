@@ -40,13 +40,53 @@ async function updatePost(url="", token, data={}) {
 
 
 // update post
-createPostForm = document.getElementById('update-post-form');
-createPostForm.addEventListener('submit', function (e) {
+
+function updateFileSelect(image_file){
+      const reader = new FileReader()
+      reader.onload = updateFileLoad;
+      reader.readAsDataURL(image_file)
+}
+
+function updateFileLoad(event){
+    console.log(event.target.result)
+    const formData = new FormData(updatePostForm)
+        updatePost(this.action, localStorage.getItem('access_token'), {
+        title: formData.get('post_title'),
+        content: formData.get('post_content'),
+        image: event.target.result
+    });
+}
+
+const updatePostForm = document.getElementById('update-post-form');
+updatePostForm.addEventListener('submit', function (e){
     e.preventDefault()
-    const res = updatePost(this.action, localStorage.getItem('access_token') ,  {
-        title: this.updateposttitle.value,
-        content: this.updatepostcontent.value,
-    })
+    const update_post_image = e.currentTarget.update_post_image.files[0]
+    if (update_post_image){
+        updateFileSelect(update_post_image)
+    }else {
+        updateFileLoad(e)
+    }
+
 });
+
+// const updatePostForm = document.getElementById('update-post-form');
+// updatePostForm.addEventListener('submit', function (e){
+//     e.preventDefault()
+//     const update_post_image = e.currentTarget.update_post_image.files[0]
+//     if (update_post_image){
+//         handleFileSelect(update_post_image)
+//     }else {
+//         handleFileLoad(e, updatePostForm)
+//     }
+// });
+
+
+// updatePostForm.addEventListener('submit', function (e) {
+//     e.preventDefault()
+//     const res = updatePost(this.action, localStorage.getItem('access_token') ,  {
+//         title: this.updateposttitle.value,
+//         content: this.updatepostcontent.value,
+//     })
+// });
 
 

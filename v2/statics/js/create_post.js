@@ -47,26 +47,18 @@ async function createPost(url="", token, data={}) {
     }
 }
 
-
-
-
-
-
 const createPostForm = document.getElementById('create-post-form');
-// function init(){
-//       document.getElementById('postimage').addEventListener('change', handleFileSelect, false);
-//     }
 
-function handleFileSelect(image_file){
-  const reader = new FileReader()
-  reader.onload = handleFileLoad;
-  reader.readAsDataURL(image_file)
+function createFileSelect(image_file){
+      const reader = new FileReader()
+      reader.onload = createFileLoad;
+      reader.readAsDataURL(image_file)
 }
 
-function handleFileLoad(event){
+function createFileLoad(event){
+    console.log(event.target.result)
     const formData = new FormData(createPostForm)
-    console.log(this.action)
-    createPost(this.action, localStorage.getItem('access_token'), {
+        createPost(this.action, localStorage.getItem('access_token'), {
         title: formData.get('post_title'),
         content: formData.get('post_content'),
         image: event.target.result
@@ -74,7 +66,13 @@ function handleFileLoad(event){
 }
 createPostForm.addEventListener('submit', function (e){
     e.preventDefault()
-    handleFileSelect(e.currentTarget.post_image.files[0])
+    const create_post_image = e.currentTarget.create_post_image.files[0]
+    if (create_post_image){
+        createFileSelect(create_post_image)
+    }else {
+        createFileLoad(e)
+    }
+
 });
 
 // createPostForm.addEventListener('submit', function (e){

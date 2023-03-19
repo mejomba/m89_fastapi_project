@@ -110,10 +110,15 @@
                 <h2 class="text-center bg-info p-2">ویرایش پست</h2>
                 <form class="row g-3 my-5 border border-rounded shadow-lg p-2" method="POST" action={{ url_for('update_post', post_id=post.post_id) }} id="update-post-form" >
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="postTitle" name="updateposttitle" placeholder="عنوان پست" value={{ post.title }}>
+                  <input type="text" class="form-control" id="postTitle" name="post_title" value="{{ post.title }}">
                 </div>
                 <div class="mb-3">
-                  <textarea class="form-control" id="postContent" name="updatepostcontent" rows="6" placeholder="متن پست">{{ post.content }}</textarea>
+                  <textarea class="form-control" id="postContent" name="post_content" rows="6" >{{ post.content }}</textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="file" class="from-label mb-1">تصویر (نسبت ۱۶:۹ پیشنهاد میشود)</label>
+                  <input type="file" class="form-control" id="updatepostimage" name="update_post_image" >
+                    {{ post.image }}
                 </div>
 
                 <button type="submit" class="btn btn-primary mb-3">ارسال پست</button>
