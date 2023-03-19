@@ -21,7 +21,7 @@ template = Jinja2Templates(directory='templates')
 def home_page(request: Request,
               db: Session = Depends(get_db),
               current_user: models.auth.User | None = Depends(jwt_manager.get_current_user)):
-    last_post = db.query(models.posts.Post).order_by(desc(models.posts.Post.last_update)).limit(10)
+    last_post = db.query(models.posts.Post).filter(models.posts.Post.status == 'published').order_by(desc(models.posts.Post.last_update)).limit(10)
     context = {'request': request, 'posts': last_post, 'user': current_user}
     return template.TemplateResponse('home.html', context)
 
@@ -292,7 +292,6 @@ def comment_manage(request: Request,
             return comment
 
         elif payload.user_action == 'delete':
-            print('delete')
             comment_query.delete(synchronize_session=False)
             db.commit()
             response.status_code = status.HTTP_204_NO_CONTENT
@@ -302,7 +301,6 @@ def comment_manage(request: Request,
         db.commit()
         response.status_code = status.HTTP_204_NO_CONTENT
     else:
-        print('inja')
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='شما صاحب این کامنت نیستید')
 
 
@@ -350,23 +348,23 @@ def edit_comment(request: Request,
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='شما مالک این کامنت نیستین')
 
 
-@router.delete('/users_comments/delete/{comment_id}', status_code=status.HTTP_204_NO_CONTENT)
-def delete_comment(comment_id: int,
-                db: Session = Depends(get_db),
-                current_post: models.posts.Post = Depends(jwt_manager.get_current_user),
-                current_user: models.auth.User = Depends(jwt_manager.get_current_user)
-                ):
-    comment_query = db.query(models.posts.Comment).filter(models.posts.Comment.comment_id == comment_id)
-    comment = comment_query.first()
-
-    if comment is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='comment not found')
-    else:
-        if comment.post_id == current_post.post_id or current_user.role == 'admin':
-            comment_query.delete(synchronize_session=False)
-            db.commit()
-        else:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='you are not owner of this comment')
+# @router.delete('/users_comments/delete/{comment_id}', status_code=status.HTTP_204_NO_CONTENT)
+# def delete_comment(comment_id: int,
+#                 db: Session = Depends(get_db),
+#                 current_post: models.posts.Post = Depends(jwt_manager.get_current_user),
+#                 current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+#                 ):
+#     comment_query = db.query(models.posts.Comment).filter(models.posts.Comment.comment_id == comment_id)
+#     comment = comment_query.first()
+#
+#     if comment is None:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='comment not found')
+#     else:
+#         if comment.post_id == current_post.post_id or current_user.role == 'admin':
+#             comment_query.delete(synchronize_session=False)
+#             db.commit()
+#         else:
+#             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='you are not owner of this comment')
 
 @router.get('/dashboard/post/manage')
 def post_manage():
