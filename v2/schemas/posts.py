@@ -57,6 +57,9 @@ class updatePost(BaseModel):
         return v
 
 
+class updateComment(BaseModel):
+    content: str
+
 class ResponsePost(BaseModel):
     title: str
     content: str

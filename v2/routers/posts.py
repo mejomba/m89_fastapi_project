@@ -369,3 +369,48 @@ def edit_comment(request: Request,
 @router.get('/dashboard/post/manage')
 def post_manage():
     pass
+
+
+
+
+@router.delete('/comments/delete/{comment_id}', status_code=status.HTTP_204_NO_CONTENT)
+def delete_comment(comment_id: int,
+                   db: Session = Depends(get_db),
+                   current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                   ):
+    comment_query = db.query(models.posts.Comment).filter(models.posts.Comment.comment_id == comment_id)
+    comment = comment_query.first()
+
+    if comment is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='comment not found')
+    else:
+        if comment.user_id == current_user.user_id or current_user.role == 'admin':
+            comment_query.delete(synchronize_session=False)
+            db.commit()
+        else:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f'your not owner of this post')
+
+
+@router.put('/comments/update/{comment_id}', status_code=status.HTTP_206_PARTIAL_CONTENT)
+def update_comment(response: Response, comment_id: int,
+                   payload: schemas.posts.updateComment,
+                   db: Session = Depends(get_db),
+                   current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                   ):
+    comment_query = db.query(models.posts.Comment).filter(models.posts.Comment.comment_id == comment_id)
+    comment = comment_query.first()
+
+    if comment is not None:
+        print(current_user.user_id)
+        print(comment.user_id)
+        if comment.user_id == current_user.user_id or current_user.role == "admin":
+            payload_dict = payload.dict()
+            payload_dict.update({"last_update": datetime.datetime.now()})
+            comment_query.update(payload_dict, synchronize_session=False)
+            db.commit()
+            return comment
+        else:
+            # raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='you arent owner of this comment')
+            response.status_code = status.HTTP_404_NOT_FOUND
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='comment not found')
