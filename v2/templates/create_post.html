@@ -77,29 +77,24 @@
 
 
 {% block content %}
-    <div id="result">
-    salam
-    </div>
+
 {% if user.role == 'admin' or user.role == 'writer' %}
     <div class="container">
-    <form class="row g-3 my-5 border border-rounded shadow-lg p-2" method="POST" enctype="multipart/form-data" action={{ url_for('create_post') }} >
+    <form class="row g-3 my-5 border border-rounded shadow-lg p-2" id="create-post-form" method="POST" action={{ url_for('create_post') }} >
         <div class="mb-3">
-          <input type="text" class="form-control" id="postTitle" name="post_title" placeholder="عنوان پست">
+          <input type="text" class="form-control" id="postTitle" name="post_title" placeholder="عنوان پست" required>
         </div>
         <div class="mb-3">
-          <textarea class="form-control" id="postContent" name="post_content" rows="6" placeholder="متن پست"></textarea>
+          <textarea class="form-control" id="postContent" name="post_content" rows="6" placeholder="متن پست" required></textarea>
         </div>
         <div class="mb-3">
           <label for="file" class="from-label">تصویر</label>
-          <input type="file" class="form-control" id="postimage" name="post_image">
+          <input type="file" class="form-control" id="postimage" name="post_image" required>
         </div>
 
         <button type="submit" class="btn btn-primary mb-3">ارسال پست</button>
     </form>
     </div>
-
-
-
 {% else %}
 <h1 class="text-center text-danger bg-warning p-4">برای دسترسی به این صفحه باید نویسنده باشید</h1>
 

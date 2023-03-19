@@ -1,6 +1,9 @@
 import os
 import datetime
+import base64
 import shutil
+import time
+import re
 from fastapi import APIRouter, HTTPException, Depends, Request, status, FastAPI, UploadFile, File, Form, Response
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -10,6 +13,7 @@ import jwt_manager
 import schemas, models
 from database_manager import get_db
 import schemas.posts
+import jalali_date
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -34,64 +38,91 @@ def create_post(request: Request, current_user: models.auth.User = Depends(jwt_m
     return template.TemplateResponse('create_post.html', context)
 
 
-# @router.post('/post', response_model=schemas.posts.ResponsePost | None, status_code=status.HTTP_201_CREATED)
-# def create_post(payload: schemas.posts.CreatePost,
-#                 db: Session = Depends(get_db),
-#                 current_user: models.auth.User = Depends(jwt_manager.get_current_user)
-#                 ):
-#     """create new post depends on login user"""
-#     print(payload)
-#     if not current_user:
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='you must be login')
+@router.post('/post', response_model=schemas.posts.ResponsePost | None, status_code=status.HTTP_201_CREATED)
+def create_post(request: Request,
+                response: Response,
+                payload: schemas.posts.CreatePost,
+                db: Session = Depends(get_db),
+                current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                ):
+
+    """create new post depends on login user"""
+
+    context = {'request': request, 'user': current_user}
+
+    if not current_user:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return template.TemplateResponse('create_post.html', context)
+
+    payload_dict = payload.dict()
+
+    try:
+        pattern = r'.*\/(\w+);.*'
+        image_data = payload.image.split(',')
+        image_type = image_data[0]
+        image_type = re.search(pattern, image_type).group(1)
+        base64_image = image_data[1]
+        base64_image_to_byte = base64_image.encode('utf-8')
+        image_name = jalali_date.Gregorian(datetime.datetime.now().date()).persian_string("{}_{}_{}")
+        image_url = f'/statics/images/upload/post/{image_name}_{time.time()}.{image_type}'
+
+        with open(f'{BASE_DIR}{image_url}', 'wb') as file:
+            decoded_base64_image = base64.decodebytes(base64_image_to_byte)
+            file.write(decoded_base64_image)
+
+        if current_user.role == "admin":
+            payload_dict.update({'status': 'published', 'user_id': current_user.user_id, 'image': image_url})
+        elif current_user.role == "writer":
+            payload_dict.update({'status': 'pending', 'user_id': current_user.user_id, 'image': image_url})
+        else:
+            response.status_code = status.HTTP_403_FORBIDDEN
+            return
+
+    except Exception:
+        response.status_code = status.HTTP_406_NOT_ACCEPTABLE
+        return
+
+    try:
+        new_post = models.posts.Post(**payload_dict)
+        db.add(new_post)
+        db.commit()
+        db.refresh(new_post)
+    except Exception:
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+
+
+# import shutil
+# @router.post("/post", status_code=status.HTTP_201_CREATED)
+# async def create_post(request: Request,
+#                       post_title: str = Form(...),
+#                       post_content: str = Form(...),
+#                       post_image: UploadFile = File(...),
+#                       db: Session = Depends(get_db),
+#                       current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+#                       ):
+#     image_url = f'/statics/images/upload/post/{post_image.filename}'
+#     with open(f'{BASE_DIR}{image_url}', "wb") as buffer:
+#         shutil.copyfileobj(post_image.file, buffer)
 #
-#     payload_dict = payload.dict()
-#
+#     payload_dict = {}
 #     if current_user.role == "admin":
 #         payload_dict.update({'status': 'published', 'user_id': current_user.user_id})
 #     elif current_user.role == "writer":
 #         payload_dict.update({'status': 'pending', 'user_id': current_user.user_id})
 #     else:
-#         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='access denied')
-
-    # new_post = models.posts.Post(**payload_dict)
-    # db.add(new_post)
-    # db.commit()
-    # db.refresh(new_post)
-    # return new_post
-
-
-import shutil
-@router.post("/post", status_code=status.HTTP_201_CREATED)
-async def create_post(request: Request,
-                      post_title: str = Form(...),
-                      post_content: str = Form(...),
-                      post_image: UploadFile = File(...),
-                      db: Session = Depends(get_db),
-                      current_user: models.auth.User = Depends(jwt_manager.get_current_user)
-                      ):
-    image_url = f'/statics/images/upload/post/{post_image.filename}'
-    with open(f'{BASE_DIR}{image_url}', "wb") as buffer:
-        shutil.copyfileobj(post_image.file, buffer)
-
-    payload_dict = {}
-    if current_user.role == "admin":
-        payload_dict.update({'status': 'published', 'user_id': current_user.user_id})
-    elif current_user.role == "writer":
-        payload_dict.update({'status': 'pending', 'user_id': current_user.user_id})
-    else:
-        context = {'request': request, 'user': current_user, 'status': status.HTTP_403_FORBIDDEN}
-        return template.TemplateResponse('create_post.html', context)
-
-    try:
-        new_post = models.posts.Post(**payload_dict, title=post_title, content=post_content, image=image_url)
-        db.add(new_post)
-        db.commit()
-        db.refresh(new_post)
-        context = {'request': request, 'user': current_user, 'status': status.HTTP_201_CREATED}
-        return template.TemplateResponse('create_post.html', context)
-    except Exception:
-        context = {'request': request, 'user': current_user, 'status': status.HTTP_500_INTERNAL_SERVER_ERROR}
-        return template.TemplateResponse('create_post.html', context)
+#         context = {'request': request, 'user': current_user, 'status': status.HTTP_403_FORBIDDEN}
+#         return template.TemplateResponse('create_post.html', context)
+#
+#     try:
+#         new_post = models.posts.Post(**payload_dict, title=post_title, content=post_content, image=image_url)
+#         db.add(new_post)
+#         db.commit()
+#         db.refresh(new_post)
+#         context = {'request': request, 'user': current_user, 'status': status.HTTP_201_CREATED}
+#         return template.TemplateResponse('create_post.html', context)
+#     except Exception:
+#         context = {'request': request, 'user': current_user, 'status': status.HTTP_500_INTERNAL_SERVER_ERROR}
+#         return template.TemplateResponse('create_post.html', context)
 
 
 @router.get("/posts/{id}", response_model=Dict)

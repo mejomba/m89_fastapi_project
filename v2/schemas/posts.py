@@ -30,7 +30,7 @@ class User(BaseModel):
 class CreatePost(BaseModel):
     title: str
     content: str
-    image: Dict | None = None
+    image: str
 
     @validator('title')
     def validate_title(cls, v):

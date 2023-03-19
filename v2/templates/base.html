@@ -13,8 +13,13 @@
     {% block style %}{% endblock %}
 
 </head>
-<body>
-
+{#{% set create_post_url = url_for('create_post')  %}#}
+{##}
+{#{% if request.url == create_post_url %}#}
+{#    <body onload="init()">#}
+{#{% else %}#}
+    <body>
+{#{% endif %}#}
 
     <!-- main navbar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
