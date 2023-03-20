@@ -84,11 +84,6 @@ if (deletePostBtns){
 
 
 // remove account
-
-function sleep(delay) {
-    var start = new Date().getTime();
-    while (new Date().getTime() < start + delay);
-}
 async function removeAccount(url="", data={}) {
         const response = await fetch(url, {
             method: "DELETE",

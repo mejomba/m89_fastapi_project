@@ -40,8 +40,8 @@ async function editComment(url="", token, data={}) {
 
 
 // edit comment
-createPostForm = document.getElementById('update-comment-form');
-createPostForm.addEventListener('submit', function (e) {
+const updateCommentForm = document.getElementById('update-comment-form');
+updateCommentForm.addEventListener('submit', function (e) {
     e.preventDefault()
     const res = editComment(this.action, localStorage.getItem('access_token') ,  {
         content: this.updatecommentcontent.value

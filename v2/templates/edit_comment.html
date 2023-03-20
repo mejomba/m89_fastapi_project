@@ -108,6 +108,7 @@
 
             <div class="container">
                 <h2 class="text-center bg-info p-2">ویرایش کامنت</h2>
+                <small class="ms-2">پست:</small><a href={{ url_for('get_post', id=comment.post_related.post_id) }}>{{ comment.post_related.title }}</a><br>
                 <form class="row g-3 my-5 border border-rounded shadow-lg p-2" method="POST" action={{ url_for('edit_comment', comment_id=comment.comment_id) }} id="update-comment-form" >
                 <div class="mb-3">
                   <textarea class="form-control" id="postContent" name="updatecommentcontent" rows="6" placeholder="متن پست">{{ comment.content }}</textarea>
