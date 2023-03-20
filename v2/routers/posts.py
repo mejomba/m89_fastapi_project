@@ -251,11 +251,12 @@ def update_post(request: Request,
     if not post:
         return template.TemplateResponse('404.html', {'request': request})
 
-    if post.user_id != current_user.user_id:
-        return template.TemplateResponse('404.html', {'request': request})
+    if current_user.role == 'admin' or post.user_id == current_user.user_id:
+        context = {'request': request, 'post': post, 'user': current_user}
+        return template.TemplateResponse('update_post.html', context)
 
-    context = {'request': request, 'post': post, 'user': current_user}
-    return template.TemplateResponse('update_post.html', context)
+    return template.TemplateResponse('404.html', {'request': request})
+
 
 
 @router.put('/post/update/{post_id}', status_code=status.HTTP_206_PARTIAL_CONTENT)
@@ -287,9 +288,9 @@ def update_post(response: Response,
         payload_dict.pop('remove_image')
 
         if current_user.role == "admin":
-            payload_dict.update({'status': 'published', 'user_id': current_user.user_id, 'image': image_url})
+            payload_dict.update({'status': 'published', 'user_id': post.user_id, 'image': image_url})
         elif current_user.role == "writer":
-            payload_dict.update({'status': 'pending', 'user_id': current_user.user_id, 'image': image_url})
+            payload_dict.update({'status': 'pending', 'user_id': post.user_id, 'image': image_url})
         else:
             response.status_code = status.HTTP_403_FORBIDDEN
             return
@@ -419,10 +420,59 @@ def edit_comment(request: Request,
 #             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='you are not owner of this comment')
 
 @router.get('/dashboard/post/manage')
-def post_manage():
-    pass
+def post_manage(request: Request,
+                db: Session = Depends(get_db),
+                current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                ):
+    if current_user.role == 'admin':
+        posts = db.query(models.posts.Post).order_by(models.posts.Post.status).all()
+        context = {'request': request, 'posts': posts, 'user': current_user}
+        return template.TemplateResponse('post_manage.html', context)
 
 
+@router.post('/dashboard/post/manage/{post_id}')
+def post_manage(response: Response,
+                post_id: int,
+                payload: schemas.posts.UserPostAction,
+                db: Session = Depends(get_db),
+                current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                ):
+    if current_user.role == 'admin':
+        post_query = db.query(models.posts.Post).filter(models.posts.Post.post_id == post_id)
+
+        payload_dict = payload.dict()
+        payload_dict.pop('user_action')
+
+        if payload.user_action == 'ok':
+            try:
+                payload_dict.update({'status': 'published', 'last_update': datetime.datetime.now()})
+                post_query.update(payload_dict, synchronize_session=False)
+                db.commit()
+                response.status_code = status.HTTP_206_PARTIAL_CONTENT
+                return
+            except Exception:
+                response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        elif payload.user_action == 'reject':
+            try:
+                payload_dict.update({'status': 'reject', 'last_update': datetime.datetime.now()})
+                post_query.update(payload_dict, synchronize_session=False)
+                db.commit()
+                response.status_code = status.HTTP_206_PARTIAL_CONTENT
+                return
+            except Exception:
+                response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        elif payload.user_action == 'delete':
+            try:
+                post_query.delete(synchronize_session=False)
+                db.commit()
+                response.status_code = status.HTTP_204_NO_CONTENT
+                return
+            except Exception:
+                response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+                return
+    else:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return
 
 
 # @router.delete('/comments/delete/{comment_id}', status_code=status.HTTP_204_NO_CONTENT)

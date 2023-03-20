@@ -164,10 +164,21 @@
                       <img width="100%" src={{ user_post.image }} alt="image">
                   </div>
               <div class="row g-0">
-
                   <div class="col-md-12">
                     <div class="card-body">
+                    <div class="d-flex justify-content-between">
                       <h5 class="card-title">{{ user_post.title }}</h5>
+                        <div>
+                            {% if user_post.status == 'published' %}
+                                <span class="badge text-bg-success">{{ user_post.status }}</span>
+                            {% elif user_post.status == 'reject' %}
+                                <span class="badge text-bg-danger ">{{ user_post.status }}</span>
+                            {% elif user_post.status == 'pending' %}
+                                <span class="badge text-bg-warning ">{{ user_post.status }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
                         <hr>
                       <p class="card-text">{{ user_post.content | truncate(150) }}</p>
                       <p class="card-text"><small class="text-muted">

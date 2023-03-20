@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %} مدیریت کامنت ها {% endblock %}
+
+{% block style %}
+    <style>
+        .post-img-thumbnail {
+            width: 16rem;
+            height: 9rem;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+
+    {% if user %}
+    <div class="container-fluid">
+      <div class="row">
+
+      <div class="col-md-3">
+          <div class="sticky-top">
+              <ul class="list-group p-0 my-md-0 my-4">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href={{ url_for("user_profile") }}>پست های من</a>
+                    <span class="badge bg-primary rounded-pill">{{ user_posts | length }}</span>
+                  </li>
+
+                  {% if user.role != 'regular_user' %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("create_post") }} >ایجاد پست</a>
+                        <span class="badge bg-primary rounded-pill"></span>
+                      </li>
+                  {% endif %}
+
+                  {% if user.role == 'admin' %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("get_user_manage") }} >درخواست های کاربران</a>
+                        <span class="badge bg-primary rounded-pill">{{ request_count }}</span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("post_manage") }} >پست های در انتظار</a>
+                        <span class="badge bg-primary rounded-pill"></span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("comment_manage") }} >کامنت های در انتظار</a>
+                        <span class="badge bg-primary rounded-pill"></span>
+                      </li>
+                  {% endif %}
+
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href={{ url_for('get_all_comment_user', user_name=user.username) }} >کامنت های من</a>
+                  </li>
+                  {% if user.role == 'regular_user' %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span role="button" id="request-writer">نویسنده شدن</span>
+                  </li>
+                    {% endif %}
+            </ul>
+          </div>
+      </div>
+
+
+      <div class="col-md-9">
+        <div class="row my-5">
+            {% for post in posts %}
+            <section class="col-md-4 col-12 align-items-center">
+            {% if post.status == 'pending' %}
+                <article class="px-4 py-2 border my-1 shadow rounded">
+            {% else %}
+                <article class="px-4 py-2 border my-1 rounded">
+            {% endif %}
+
+                    <div class="d-flex justify-content-end">
+                    {% if post.status == 'pending' %}
+                            <span class="badge text-bg-warning">{{ post.status }}</span>
+                        {% elif post.status == 'reject' %}
+                            <span class="badge text-bg-danger">{{ post.status }}</span>
+                        {% elif post.status == 'published' %}
+                             <span class="badge text-bg-success">{{ post.status }}</span>
+                        {% endif %}
+                    </div>
+                        <h3>{{ post.title }}</h3>
+                        <p>{{ post.content | truncate(250) }} <a href={{ url_for('get_post', id=post.post_id) }}>ادامه مطالعه</a></p>
+                        <small class="ms-2">نویسنده:</small><small>{{ post.owner.first_name }} {{ post.owner.last_name }}</small><br>
+                        <small class="ms-2">آخرین ویرایش:</small><small>{{ post.last_update.date() | to_jalali }}</small>
+
+                    {% if post.status == 'pending' %}
+                        <form class="writer-request-form" action={{ url_for('post_manage', post_id=post.post_id) }}>
+                            <div class="d-flex justify-content-between mt-3">
+                                <div>
+                                    <button class="btn btn-outline-success confirm-post" type="submit" >تایید</button>
+                                    <button class="btn btn-outline-danger reject-post" type="submit" >رد </button>
+                                </div>
+                                <div>
+                                    <a class="btn btn-link" href={{ url_for('update_post', post_id=post.post_id) }} >ویرایش</a>
+                                    <button class="btn btn-link text-danger delete-post" type="submit" >حذف</button>
+                                </div>
+                            </div>
+                        </form>
+                    {% else %}
+                        <form class="writer-request-form" action={{ url_for('post_manage', post_id=post.post_id) }}>
+                            <div class="d-flex justify-content-between mt-3">
+                                <div>
+                                </div>
+                                <div>
+                                    <a class="btn btn-link" href={{ url_for('update_post', post_id=post.post_id) }} >ویرایش</a>
+                                    <button class="btn btn-link text-danger delete-post" type="submit" >حذف</button>
+                                </div>
+                            </div>
+                        </form>
+                    {% endif %}
+                </article>
+            </section>
+            {% endfor %}
+        </div>
+    </div>
+
+
+      </div>
+    </div>
+{% else %}
+    <h1 class="text-center text-danger bg-warning p-4">برای دسترسی به این صفحه باید وارد شوید</h1>
+{% endif %}
+
+
+
+
+
+
+{% endblock %}
+
+{% block script %}
+    <script src={{ url_for('statics', path='js/post_manage.js') }}></script>
+{% endblock %}

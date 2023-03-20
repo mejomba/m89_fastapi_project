@@ -85,5 +85,8 @@ class UserCommentAction(BaseModel):
     user_action: str
 
 
+class UserPostAction(BaseModel):
+    user_action: str
+
 class EditComment(BaseModel):
     content: str
