@@ -81,9 +81,9 @@
                         {% endif %}
                     </div>
                         <p>{{ comment.content }}</p>
-                        <span class="ms-2">پست:</span><a href={{ url_for('get_post', id=comment.post_related.post_id) }}>{{ comment.post_related.title }}</a><br>
-                        <span class="ms-2">نویسنده:</span><span>{{ comment.user_related.first_name }} {{ comment.user_related.last_name }}</span><br>
-                        <span class="ms-2">آخرین ویرایش:</span><span>{{ comment.last_update.date() | to_jalali }}</span>
+                        <small class="ms-2">پست:</small><a href={{ url_for('get_post', id=comment.post_related.post_id) }}>{{ comment.post_related.title }}</a><br>
+                        <small class="ms-2">نویسنده:</small><small>{{ comment.user_related.first_name }} {{ comment.user_related.last_name }}</small><br>
+                        <small class="ms-2">آخرین ویرایش:</small><small>{{ comment.last_update.date() | to_jalali }}</small>
 
                     {% if comment.status == 'pending' %}
                         <form class="writer-request-form" action={{ url_for('comment_manage', comment_id=comment.comment_id) }}>
