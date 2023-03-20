@@ -261,7 +261,7 @@ def update_post(request: Request,
 @router.put('/post/update/{post_id}', status_code=status.HTTP_206_PARTIAL_CONTENT)
 def update_post(response: Response,
                 post_id: int,
-                payload: schemas.posts.CreatePost,
+                payload: schemas.posts.UpdatePost,
                 db: Session = Depends(get_db),
                 current_user: models.auth.User = Depends(jwt_manager.get_current_user)
                 ):
@@ -270,16 +270,21 @@ def update_post(response: Response,
     post = post_query.first()
 
     if post and (post.user_id == current_user.user_id or current_user.role == 'admin'):
-        if image := payload.image:
+        if payload.remove_image:
+            image_url = f'/statics/images/upload/post/no_image.png'
+        elif image := payload.image:
             try:
                 image_url = save_image(image)
             except Exception:
                 response.status_code = status.HTTP_406_NOT_ACCEPTABLE
                 return
+        elif not payload.image and not payload.remove_image:
+            image_url = post.image
         else:
             image_url = f'/statics/images/upload/post/no_image.png'
 
         payload_dict = payload.dict()
+        payload_dict.pop('remove_image')
 
         if current_user.role == "admin":
             payload_dict.update({'status': 'published', 'user_id': current_user.user_id, 'image': image_url})
