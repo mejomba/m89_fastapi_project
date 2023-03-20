@@ -45,16 +45,8 @@ class CreatePost(BaseModel):
         return v
 
 
-# class updatePost(BaseModel):
-#     title: str
-#     content: str
-#     image: str | None = None
-#
-#     @validator('*')
-#     def validate_title(cls, v):
-#         if not v:
-#             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='title and content required')
-#         return v
+class UpdatePost(CreatePost):
+    remove_image: bool | None
 
 
 class updateComment(BaseModel):

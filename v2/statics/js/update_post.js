@@ -48,12 +48,13 @@ function updateFileSelect(image_file){
 }
 
 function updateFileLoad(event){
-    console.log(event.target.result)
     const formData = new FormData(updatePostForm)
+    console.log("remove post: ",formData.get('remove_post_image'))
         updatePost(this.action, localStorage.getItem('access_token'), {
         title: formData.get('post_title'),
         content: formData.get('post_content'),
-        image: event.target.result
+        image: event.target.result,
+        remove_image: formData.get('remove_post_image')
     });
 }
 
