@@ -12,6 +12,7 @@ import schemas.auth
 from database_manager import get_db
 import utils
 from datetime import datetime
+import settings
 
 
 router = APIRouter(tags=['auth'])
@@ -26,13 +27,14 @@ def get_base(request: Request,
     context = {'request': request, 'user': current_user}
     return template.TemplateResponse('base.html', context)
 
+
 @router.post('/users', status_code=status.HTTP_201_CREATED, response_model=schemas.auth.ResponseUser | None)
 def create_user(payload: schemas.auth.CreateUser, db: Session = Depends(get_db)):
 
     payload.password = utils.hash_password(payload.password)
 
     payload_dict = payload.dict()
-    payload_dict.update({"role": "regular_user"})
+    payload_dict.update({"role": "regular_user", 'image': '/statics/images/upload/user/no_image.png'})
     new_user = models.auth.User(**payload_dict)
 
     try:
@@ -44,6 +46,57 @@ def create_user(payload: schemas.auth.CreateUser, db: Session = Depends(get_db))
     except IntegrityError as e:
         if isinstance(e.orig, UniqueViolation):
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='user already exist')
+
+
+@router.get('/user/update/{user_id}')
+def update_user(request: Request,
+                current_user: models.auth.User = Depends(jwt_manager.get_current_user)):
+    context = {'request': request, 'user': current_user}
+
+    return template.TemplateResponse('update_user.html', context)
+
+
+@router.put('/user/update/{user_id}', status_code=status.HTTP_206_PARTIAL_CONTENT)
+def update_user(request: Request,
+                response: Response,
+                user_id: int,
+                payload: schemas.auth.UpdateUser,
+                db: Session = Depends(get_db),
+                current_user: models.auth.User = Depends(jwt_manager.get_current_user)):
+    context = {'request': request, 'user': current_user}
+
+    user_query = db.query(models.auth.User).filter(models.auth.User.user_id == user_id)
+    user = user_query.first()
+
+    if not user:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return
+
+    if payload.remove_image:
+        image_url = f'/statics/images/upload/user/no_image.png'
+    elif image := payload.image:
+        try:
+            image_url = utils.save_image(image)
+        except Exception:
+            response.status_code = status.HTTP_406_NOT_ACCEPTABLE
+            return
+    elif not payload.image and not payload.remove_image:
+        image_url = user.image
+    else:
+        image_url = f'/statics/images/upload/user/no_image.png'
+
+    payload_dict = payload.dict()
+    payload_dict.pop('remove_image')
+    payload_dict.update({'image': image_url, 'last_update': datetime.now()})
+
+    try:
+        user_query.update(payload_dict, synchronize_session=False)
+        db.commit()
+    except Exception:
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        return
+
+
 
 
 @router.post('/login', response_model=schemas.auth.Token)

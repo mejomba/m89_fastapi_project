@@ -15,6 +15,7 @@ class User(BASE):
     last_name = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_update = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    image = Column(String)
 
     role = Column(String, nullable=False)
 
