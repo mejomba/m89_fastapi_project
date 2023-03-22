@@ -99,7 +99,11 @@
       <div class="row">
 
           <div class="col-md-3">
-          <div class="sticky-top">
+          <div class="sticky-top pt-1">
+          <div class="d-flex align-items-end py-1">
+              <img src="{{ user.image }}" alt="user image" class="rounded-circle ms-3 me-1" style="width: 4rem; height: 4rem">
+              <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+          </div>
               <ul class="list-group p-0 my-md-0 my-4">
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     <a href={{ url_for("user_profile") }}>پست های من</a>
@@ -139,9 +143,9 @@
               {% endif %}
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                       <form action={{ url_for('delete_user', user_id=user.user_id) }}>
-                            <button class="btn btn-danger" role="button" id="remove-account"> حذف حساب</>
+                            <button class="btn btn-danger" role="button" id="remove-account"> حذف حساب</button>
                       </form>
-
+                      <a href="{{ url_for('update_user', user_id=user.user_id) }}" class="btn btn-primary">ویرایش حساب</a>
                   </li>
             </ul>
           </div>
@@ -187,12 +191,17 @@
                               {{ user_post.last_update.date() | to_jalali}}
                           </span>
                       </small></p>
-                        <a class="btn btn-outline-info" href={{ url_for('get_post', id=user_post.post_id) }} >مطالعه بیشتر</a>
-                        <div class="d-flex justify-content-end mt-2">
-                            <a class="text-info btn btn-link" href={{ url_for('update_post', post_id=user_post.post_id) }} >ویرایش</a>
-                            <form action={{ url_for('delete_post', post_id=user_post.post_id) }}>
-                                <button class="text-danger btn btn-link delete-post">حذف</button>
-                            </form>
+
+                        <div class="d-flex justify-content-between mt-2">
+                            <div>
+                                <a class="btn btn-outline-info" href={{ url_for('get_post', id=user_post.post_id) }} >مطالعه بیشتر</a>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <a class="text-info btn" href={{ url_for('update_post', post_id=user_post.post_id) }} >ویرایش</a>
+                                <form action={{ url_for('delete_post', post_id=user_post.post_id) }}>
+                                    <button class="text-danger btn delete-post">حذف</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                   </div>

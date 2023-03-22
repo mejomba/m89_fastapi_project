@@ -26,6 +26,11 @@ class CreateUser(BaseModel):
         return v
 
 
+class UpdateUser(CreateUser):
+    image: str | None = None
+    remove_image: bool | None = None
+
+
 class ResponseUser(BaseModel):
     email: EmailStr
     username: str
