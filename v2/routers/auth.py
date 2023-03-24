@@ -110,30 +110,32 @@ def user_login(response: Response, user_credentials: schemas.auth.UserLogin, db:
     if not utils.verify(user_credentials.password, user.password):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="invalid credentials")
 
-    token = jwt_manager.create_jwt_token({"user_id": user.user_id})
-    response.set_cookie('access_token', str(token))
-    user_query.update({'is_authenticated': True}, synchronize_session=False)
-    db.commit()
-    return {"access_token": token, "token_type": "bearer"}
+    try:
+        token = jwt_manager.create_jwt_token({"user_id": user.user_id})
+        response.set_cookie('access_token', str(token))
+        user_query.update({'is_authenticated': True}, synchronize_session=False)
+        db.commit()
+        return {"access_token": token, "token_type": "bearer"}
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="invalid credentials")
 
 
 @router.get('/logout')
-def user_logout(request: Request, response: Response,
-                db: Session = Depends(get_db),
-                current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+async def user_logout(request: Request, response: Response,
+                      db: Session = Depends(get_db),
+                      current_user: models.auth.User = Depends(jwt_manager.get_current_user)
                 ):
-
-    context = {'request': request}
-    response = template.TemplateResponse('home.html', context=context)
 
     response.delete_cookie('access_token')
 
-    user_query = db.query(models.auth.User).filter(models.auth.User.user_id == current_user.user_id)
-    user_query.update({'is_authenticated': False}, synchronize_session=False)
-    db.commit()
-
-    return response
-    # return RedirectResponse(request.url_for('home_page'))
+    try:
+        user_query = db.query(models.auth.User).filter(models.auth.User.user_id == current_user.user_id)
+        user_query.update({'is_authenticated': False}, synchronize_session=False)
+        db.commit()
+        return RedirectResponse(request.url_for('home_page'), headers=response.headers)
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='error')
 
 
 @router.get('/dashboard')
