@@ -114,7 +114,7 @@ async function loginUser(url="", data={}) {
                     userAlert.classList.remove('d-none');
                     modal.classList.remove('open-modal');
                 } else {
-                    alertMessage.innerText = "خطا در ورود"
+                    alertMessage.innerText = "نام کاربری یا رمز عبور اشتباه"
                     userAlert.classList.add('alert-danger');
                     userAlert.classList.remove('d-none');
                     modal.classList.remove('open-modal');

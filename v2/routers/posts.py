@@ -27,7 +27,6 @@ def home_page(request: Request,
               db: Session = Depends(get_db),
               current_user: models.auth.User | None = Depends(jwt_manager.get_current_user)):
     last_post = db.query(models.posts.Post).filter(models.posts.Post.status == 'published').order_by(desc(models.posts.Post.last_update)).limit(10)
-    print(last_post[0].image)
     context = {'request': request, 'posts': last_post, 'user': current_user}
     return template.TemplateResponse('home.html', context)
 
@@ -75,9 +74,7 @@ def create_post(request: Request,
         return
 
     try:
-        print(payload_dict)
         new_post = models.posts.Post(**payload_dict)
-        print(new_post.image)
         db.add(new_post)
         db.commit()
     except Exception:
