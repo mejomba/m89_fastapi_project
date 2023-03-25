@@ -6,10 +6,10 @@
 
 {% block header %}
     {% if user %}
-        <a href={{ url_for('user_profile') }} class="btn btn-outline-primary me-3" >
+        <a href="{{ url_for('user_profile') }}" class="btn btn-outline-primary me-3" >
             پروفایل
         </a>
-        <a href={{ url_for('user_logout') }}  class="btn btn-outline-danger me-3">
+        <a href="{{ url_for('user_logout') }}"  class="btn btn-outline-danger me-3">
             خروج
         </a>
         <button class="modal-btn d-none"></button>`

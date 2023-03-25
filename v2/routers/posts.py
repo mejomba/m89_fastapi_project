@@ -124,10 +124,10 @@ def get_post(request: Request, id: int,
     post = db.query(models.posts.Post).filter(models.posts.Post.post_id == id).first()
 
     if not post:
-        return template.TemplateResponse('404.html', {'request': request})
+        return template.TemplateResponse('404.html', {'request': request, 'user': current_user})
 
     comments = db.query(models.posts.Comment) \
-        .filter(models.posts.Comment.post_id == post.post_id) \
+        .filter(models.posts.Comment.post_id == post.post_id).filter(models.posts.Comment.status == 'published') \
         .order_by(desc(models.posts.Comment.publish_date)).all()
 
     context = {'request': request, 'post': post, 'comments': comments, 'user': current_user}
@@ -164,10 +164,11 @@ def user_post(request: Request, user_name: str, db: Session = Depends(get_db)):
 
     user = db.query(models.auth.User).filter(models.auth.User.username == user_name).first()
     if user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'user {user_name} not found')
+        return template.TemplateResponse('404.html', context={'request': request})
+        # raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'user {user_name} not found')
 
-    all_user_posts = db.query(models.posts.Post).filter(models.posts.Post.user_id == user.user_id)
-    context = {'request': request, 'all_user_posts': all_user_posts}
+    all_user_posts = db.query(models.posts.Post).filter(models.posts.Post.user_id == user.user_id).filter(models.posts.Post.status=='published').all()
+    context = {'request': request, 'user': user, 'all_user_posts': all_user_posts}
     return template.TemplateResponse('user_post.html', context)
 
 
@@ -180,6 +181,9 @@ def create_comment(payload: schemas.posts.CommentBase,
     """create new comment for specific post depends on login user"""
 
     payload_dict = payload.dict()
+    if not current_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='UNAUTHORIZED')
+
     if current_user.role == 'admin':
         payload_dict.update({'status': 'published', 'user_id': current_user.user_id})
     else:
