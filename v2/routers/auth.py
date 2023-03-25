@@ -1,3 +1,5 @@
+from typing import Dict
+
 from fastapi import status, HTTPException, Request, Depends, APIRouter, Cookie, Response
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
@@ -172,9 +174,9 @@ def request_change_role(request: Request,
 
 
 @router.get('/dashboard/user/manage')
-def get_user_manage(request: Request,
-                    db: Session = Depends(get_db),
-                    current_user: models.auth.User = Depends(jwt_manager.get_current_user)):
+def get_user_request_manage(request: Request,
+                            db: Session = Depends(get_db),
+                            current_user: models.auth.User = Depends(jwt_manager.get_current_user)):
 
     if current_user.role == 'admin':
         user_requests = db.query(models.auth.UserRequest).order_by(models.auth.UserRequest.status).all()
@@ -216,6 +218,52 @@ def change_user_role(
     # raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='شما به این بخش دسترسی ندارید')
 
 
+@router.get('/user/manage')
+def user_manage(request: Request,
+                username: str | None = None,
+                db: Session = Depends(get_db),
+                current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                ):
+
+    context = {'request': request, 'user': current_user}
+    if not current_user:
+        return template.TemplateResponse('404.html', context)
+
+    if current_user.role == 'admin':
+        # if username:
+            target_user = db.query(models.auth.User).filter(models.auth.User.username == username).first()
+            context.update({'target_user': target_user})
+            return template.TemplateResponse('user_manage_by_username.html', context)
+        # else:
+        #     return template.TemplateResponse('user_manage_by_username.html', context)
+
+
+@router.put('/user/manage/{user_id}', status_code=status.HTTP_206_PARTIAL_CONTENT)
+def user_manage(request: Request,
+                user_id: int,
+                payload: Dict,
+                db: Session = Depends(get_db),
+                current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                ):
+    context = {'request': request, 'user': current_user}
+    if current_user.role != 'admin':
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='only admin')
+
+    user_query = db.query(models.auth.User).filter(models.auth.User.user_id == user_id)
+    user = user_query.first()
+
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='user not found')
+
+    try:
+        user_query.update({'role': payload.get('role')}, synchronize_session=False)
+        db.commit()
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='error')
+
+
+
 @router.delete('/users_manage/delete/{user_id}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(request: Request,
                 response: Response,
@@ -235,6 +283,6 @@ def delete_user(request: Request,
         if user.user_id == current_user.user_id or current_user.role == 'admin':
             user_query.delete(synchronize_session=False)
             db.commit()
-            RedirectResponse.delete_cookie(response, key='access_token')
+            # RedirectResponse.delete_cookie(response, key='access_token')
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f'you are not admin')
