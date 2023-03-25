@@ -133,8 +133,7 @@ async def user_logout(request: Request, response: Response,
         user_query.update({'is_authenticated': False}, synchronize_session=False)
         db.commit()
         return RedirectResponse(request.url_for('home_page'), headers=response.headers)
-    except Exception as e:
-        print(e)
+    except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='error')
 
 

@@ -97,7 +97,64 @@
 {% if user %}
     <div class="container-fluid">
       <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-3">
+          <div class="sticky-top pt-1">
+          <div class="d-flex align-items-center py-1">
+              <img src="{{ user.image }}" alt="user image" class="rounded-circle ms-3 me-1" style="width: 4rem; height: 4rem">
+              <h5>{{ user.first_name }} {{ user.last_name }} </h5> <small class="me-2 badge bg-success">{{ user.role }}</small>
+          </div>
+              <ul class="list-group p-0 my-md-0 my-4">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href={{ url_for("user_profile") }}>پست های من</a>
+{#                    <span class="badge bg-primary rounded-pill">{{ user_posts | length }}</span>#}
+                  </li>
+
+                  {% if user.role != 'regular_user' %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("create_post") }} >ایجاد پست</a>
+{#                        <span class="badge bg-primary rounded-pill"></span>#}
+                      </li>
+                  {% endif %}
+
+                  {% if user.role == 'admin' %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("get_user_manage") }} >درخواست های کاربران</a>
+{#                        <span class="badge bg-primary rounded-pill"></span>#}
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("post_manage") }} >پست های در انتظار</a>
+{#                        <span class="badge bg-primary rounded-pill"></span>#}
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("comment_manage") }} >کامنت های در انتظار</a>
+{#                        <span class="badge bg-primary rounded-pill"></span>#}
+                      </li>
+                  {% endif %}
+
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href={{ url_for('get_all_comment_user', user_name=user.username) }} >کامنت های من</a>
+{#                    <span class="badge bg-primary rounded-pill">{{ comments | length }}</span>#}
+                  </li>
+              {% if user.role == 'regular_user' %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span role="button" id="request-writer">نویسنده شدن</span>
+                  </li>
+              {% endif %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <form action={{ url_for('delete_user', user_id=user.user_id) }}>
+                            <button class="btn btn-danger" role="button" id="remove-account"> حذف حساب</button>
+                      </form>
+                      <a href="{{ url_for('update_user', user_id=user.user_id) }}" class="btn btn-primary">ویرایش حساب</a>
+                  </li>
+            </ul>
+          </div>
+            {% if not user.image %}
+                <p class="text-danger text-center my-3">لطفا از بخش ویرایش حساب پروفایل خود را تکمیل کنید.</p>
+            {% endif %}
+      </div>
+
+
+      <div class="col-md-9">
 
       {% set dashboard_url = url_for('user_profile')  %}
 

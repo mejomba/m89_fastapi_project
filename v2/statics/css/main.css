@@ -15,7 +15,9 @@
 * {
     font-family: Shabnam !important;
 }
-
+body {
+    overflow-x: hidden;
+}
 footer {
     display: flex;
     align-items: center;
