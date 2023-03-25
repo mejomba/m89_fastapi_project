@@ -124,7 +124,7 @@ def user_login(response: Response, user_credentials: schemas.auth.UserLogin, db:
 async def user_logout(request: Request, response: Response,
                       db: Session = Depends(get_db),
                       current_user: models.auth.User = Depends(jwt_manager.get_current_user)
-                ):
+                      ):
 
     response.delete_cookie('access_token')
 
