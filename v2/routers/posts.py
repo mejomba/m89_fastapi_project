@@ -8,7 +8,7 @@ from fastapi import APIRouter, HTTPException, Depends, Request, status, FastAPI,
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
-from typing import List, Dict
+from typing import List, Dict, Optional
 import jwt_manager
 import schemas, models
 from database_manager import get_db
@@ -513,3 +513,18 @@ def post_manage(response: Response,
 #             response.status_code = status.HTTP_404_NOT_FOUND
 #     else:
 #         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='comment not found')
+
+
+@router.get('/search')
+def search(request: Request,
+           query: Optional[str] = None,
+           db: Session = Depends(get_db)
+           ):
+    print(query)
+    if query:
+        search_result = db.query(models.posts.Post).filter(models.posts.Post.title.contains(query)).all()
+    else:
+        search_result = None
+
+    context = {'request': request, 'posts': search_result}
+    return template.TemplateResponse('search_result.html', context)

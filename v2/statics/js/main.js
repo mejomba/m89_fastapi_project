@@ -195,3 +195,9 @@ function logout(token) {
         })
     })
     }
+
+
+// const searchForm = document.getElementById('search-form')
+// searchForm.addEventListener('submit', function (e) {
+//     e.preventDefault()
+// })
