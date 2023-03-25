@@ -75,7 +75,7 @@ class ResponseComment(BaseModel):
 class GetPost(BaseModel):
     title: str
     content: str
-    post_comment: ResponseComment
+    # post_comment: ResponseComment
 
     class Config:
         orm_mode = True

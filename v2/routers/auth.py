@@ -286,3 +286,26 @@ def delete_user(request: Request,
             # RedirectResponse.delete_cookie(response, key='access_token')
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f'you are not admin')
+
+
+@router.get('/admin/contact_us')
+def admin_contact_us(request: Request,
+                     db: Session = Depends(get_db),
+                     current_user: models.auth.User = Depends(jwt_manager.get_current_user)
+                     ):
+    context = {'request': request, 'user': current_user}
+    if current_user.role == 'admin':
+        messages = db.query(models.auth.ContactUs).order_by(desc(models.auth.ContactUs.created_at)).all()
+        context.update({'messages': messages})
+        return template.TemplateResponse('messages.html', context)
+    return template.TemplateResponse('404.html', context)
+
+@router.post('/contact_us', status_code=status.HTTP_200_OK)
+def contact_us(payload: schemas.auth.ContactUs, db: Session = Depends(get_db)):
+    print(payload)
+    try:
+        new_contact_us = models.auth.ContactUs(**payload.dict())
+        db.add(new_contact_us)
+        db.commit()
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='ورودی نامعتبر')
