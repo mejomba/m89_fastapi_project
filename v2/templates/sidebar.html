@@ -19,7 +19,7 @@
 
                   {% if user.role == 'admin' %}
                       <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a href={{ url_for("get_user_manage") }} >درخواست های کاربران</a>
+                        <a href={{ url_for("get_user_request_manage") }} >درخواست های کاربران</a>
 {#                        <span class="badge bg-primary rounded-pill"></span>#}
                       </li>
                       <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -28,6 +28,10 @@
                       </li>
                       <li class="list-group-item d-flex justify-content-between align-items-center">
                         <a href={{ url_for("comment_manage") }} >کامنت های در انتظار</a>
+{#                        <span class="badge bg-primary rounded-pill"></span>#}
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href={{ url_for("user_manage") }} >مدیریت کاربران</a>
 {#                        <span class="badge bg-primary rounded-pill"></span>#}
                       </li>
                   {% endif %}

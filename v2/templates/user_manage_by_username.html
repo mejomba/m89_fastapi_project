@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %} {% endblock %}
+
+{% block style %} {% endblock %}
+
+{% block header %}
+    {% if user %}
+        <a href="{{ url_for('user_profile') }}" class="btn btn-outline-primary me-3" >
+            پروفایل
+        </a>
+        <a href="{{ url_for('user_logout') }}"  class="btn btn-outline-danger me-3">
+            خروج
+        </a>
+        <button class="modal-btn d-none"></button>`
+    {% else %}
+        <button class="btn btn-outline-primary me-3 modal-btn">
+            ورود یا ثبت نام
+        </button>
+    {% endif %}
+
+{% endblock %}
+
+{% block login_modal %}
+
+    {% if user %}
+        <div class="modal-overlay">
+    {% else %}
+        <div class="modal-overlay open-modal">
+    {% endif %}
+        <div class="modal-container">
+            <div class="d-flex w-100">
+                <div class="bg-info d-flex w-100 align-items-center justify-content-center" id="login">
+                    <span>ورود</span>
+                </div>
+                <div class="d-flex w-100 align-items-center justify-content-center" id="signup">
+                    <span>ثبت نام</span>
+                </div>
+            </div>
+            <div id="login-form-wrapper" class="my-4">
+                <form action="/login" method="POST" id="login-form" class="w-100 p-4">
+                  <div class="form-floating mb-3">
+                      <input type="email" class="form-control" id="loginFloatingInput" name="email" placeholder="name@example.com" required>
+                      <label for="loginFloatingInput">ایمیل</label>
+                  </div>
+                  <div class="form-floating">
+                      <input type="password" class="form-control" id="loginFloatingPassword" name="password" placeholder="Password" required>
+                      <label for="loginFloatingPassword">Password</label>
+                  </div>
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary my-3 px-3">وارد شدن</button>
+                    </div>
+            </form>
+            </div>
+
+            <div id="signup-form-wrapper" class="d-none my-4">
+                <form action="/users" method="POST" id="signup-form" class="w-100 p-4">
+                  <div class="form-floating mb-3">
+                      <input type="email" class="form-control" id="signupFloatingInput" name="email" placeholder="name@example.com" required>
+                      <label for="signupFloatingInput">ایمیل</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="signupFloatingusername" name="username" placeholder="نام کاربری" required>
+                      <label for="signupFloatingusername">نام کاربری</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="password" class="form-control" id="signupFloatingPassword1" name="password" placeholder="رمز عبور" required>
+                      <label for="signupFloatingPassword1">رمز عبور</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="signupFloatingFirstName" name="first_name" placeholder="نام" required>
+                      <label for="signupFloatingFirstName">نام</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="signupFloatingLastName" name="last_name" placeholder="نام خانوادگی" required>
+                      <label for="signupFloatingLastName">نام خانوادگی</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="signupFloatinPhone" name="phone" placeholder="شماره تلفن">
+                      <label for="signupFloatingPhone">شماره تلفن</label>
+                  </div>
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary my-3 px-3">ثبت نام</button>
+                    </div>
+            </form>
+            </div>
+
+          <button class="close-btn">
+              &times;
+          </button>
+        </div>
+      </div>
+{% endblock %}
+
+{% block content %}
+
+{% if user %}
+    <div class="container-fluid">
+      <div class="row">
+
+      {% include "sidebar.html" %}
+
+      <div class="col-md-9">
+      <div class="row my-5">
+      <div class="col-lg-4">
+        <form class="d-flex w-lg-50 mb-2" role="search" target="{{ url_for('user_manage') }}">
+            <input class="form-control me-2" type="search" placeholder="username" name="username" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">جستجو</button>
+        </form>
+      </div>
+
+          <div id="user-manage-search-target" class="col-lg-7 text-center border border-rounded p-2">
+              {% if target_user %}
+                  <div class="d-flex mb-4">
+                    <h4>{{ target_user.first_name }} {{ target_user.last_name }}</h4>
+                    <div class="me-2"><span class="">({{ target_user.role }})</span></div>
+                  </div>
+                  <form action="{{ url_for('user_manage', user_id=target_user.user_id) }}" id="update-user-by-admin">
+                      <div class="d-flex mb-3 justify-content-start align-items-center">
+                          <label for="user-role">انتخاب نقش:</label>
+                          <select name="user-role" id="user-role" class="form-select w-75 me-2">
+                              <option value="regular_user">کاربر عادی</option>
+                              <option value="writer">نویسنده</option>
+                              <option value="admin">مدیر</option>
+                          </select>
+                      </div>
+                  <button type="submit" class="btn btn-primary me-2 float-end">ثبت تغییرات</button>
+                  </form>
+                  <div class="d-flex justify-content-start">
+                        <form action="{{ url_for('delete_user', user_id=target_user.user_id) }}" id="delete-user-by-admin">
+                              <button type="submit" class="btn btn-link text-danger">حذف کاربر</button>
+                        </form>
+                  </div>
+
+              {% else %}
+                  <p class="text-danger">کاربر پیدا نشد</p>
+              {% endif %}
+          </div>
+      </div>
+
+      </div>
+
+      </div>
+    </div>
+{% else %}
+    <h1 class="text-center text-danger bg-warning p-4">برای دسترسی به این صفحه باید وارد شوید</h1>
+{% endif %}
+{% endblock %}
+
+
+{% block script %}
+    <script src="{{ url_for('statics', path='js/user_manage_by_username.js') }}"></script>
+{% endblock %}
