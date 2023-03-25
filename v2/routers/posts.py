@@ -146,15 +146,22 @@ def all_published_post(request: Request,
 
 
 @router.get("/admin/posts/{post_status}", response_model=List[schemas.posts.GetPost])
-def get_post_by_status(request: Request, post_status: str, db: Session = Depends(get_db),
+def get_post_by_status(request: Request,
+                       post_status: str,
+                       db: Session = Depends(get_db),
                        current_user: models.auth.User = Depends(jwt_manager.get_current_user)):
 
     """get all post by status (published, pending, draft, reject) => only for admin user"""
+
     if current_user and current_user.role == 'admin':
-        all_posts = db.query(models.posts.Post).filter(models.posts.Post.status == post_status).all()
-        # context = {'request': request, 'all_posts': all_posts}
-        # return template.TemplateResponse('home.html', context)
-        return all_posts
+        if post_status == 'all':
+            all_posts = db.query(models.posts.Post).all()
+        else:
+            all_posts = db.query(models.posts.Post).filter(models.posts.Post.status == post_status).all()
+
+        context = {'request': request, 'user': current_user, 'posts': all_posts}
+        return template.TemplateResponse('post_manage.html', context)
+        # return all_posts
     else:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='access denied')
 
