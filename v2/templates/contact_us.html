@@ -14,17 +14,17 @@
       <h2 class="h1-responsive font-weight-bold text-center my-4">ارتباط با ما</h2>
       <p class="text-center w-responsive mx-auto mb-5">آیا هیچ سوالی دارید؟ لطفا در تماس مستقیم با ما دریغ نکنید. تیم ما در عرض چند ساعت به شما مراجعه خواهد کرد تا به شما کمک کند.</p>
       <br></br>
-        <form>
+        <form action="{{ url_for('contact_us') }}" id="contact-us-form">
           <div class="mb-3 ">
-            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="نام ">
+            <input type="text" class="form-control" id="exampleInputEmail1" name="name" aria-describedby="emailHelp" placeholder="نام ">
           </div>
           <br></br>
           <div class="mb-3">
-            <input type="email" class="form-control" id="exampleInput3" placeholder="ایمیل">
+            <input type="email" class="form-control" id="exampleInput3" name="email" placeholder="ایمیل">
           </div>
           <br></br>
           <div class="md-3">
-            <textarea type="text" class="form-control" id="message" cols="30" rows="10" placeholder="نظرات و انتقادات شما:"></textarea>
+            <textarea type="text" class="form-control" id="message" name="content" cols="30" rows="10" placeholder="نظرات و انتقادات شما:"></textarea>
           </div>
           <br></br>
           <button type="submit" class="btn btn-primary">ارسال نظر</button>
@@ -59,4 +59,39 @@
 
 {% endblock %}
 
-{% block script %} {% endblock %}
+{% block script %}
+    <script>
+    async function sendFeadBack(url="", data={}) {
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    })
+    if (response.status === 200) {
+        alertMessage.innerText = "عملیات موفق"
+        userAlert.classList.add('alert-success');
+        userAlert.classList.remove('alert-danger');
+        userAlert.classList.remove('d-none');
+        modal.classList.remove('open-modal');
+    } else {
+        alertMessage.innerText = "خطا: ورودی ها بررسی کنید"
+        userAlert.classList.add('alert-danger');
+        userAlert.classList.remove('d-none');
+        modal.classList.remove('open-modal');
+    }
+}
+
+const contactUsForm = document.getElementById('contact-us-form')
+    contactUsForm.addEventListener('submit', function (e) {
+        e.preventDefault()
+        sendFeadBack(this.action, {
+            name: this.name.value,
+            email: this.email.value,
+            content: this.content.value
+        })
+    })
+
+    </script>
+{% endblock %}

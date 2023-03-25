@@ -57,3 +57,9 @@ class UserLogin(BaseModel):
 
 class ChangeUserRole(BaseModel):
     user_request_action: str
+
+
+class ContactUs(BaseModel):
+    name: str
+    email: EmailStr
+    content: str
