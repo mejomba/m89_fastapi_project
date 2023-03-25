@@ -29,7 +29,7 @@ async function createComment(url="", token, data={}) {
         body: JSON.stringify(data)
     })
     if (response.status === 201) {
-        alertMessage.innerText = "کامنت با موفقیت ثب شد"
+        alertMessage.innerText = "کامنت با موفقیت ثب شد وپس از تایید نمایش داده میشود"
         userAlert.classList.add('alert-success');
         userAlert.classList.remove('alert-danger');
         userAlert.classList.remove('d-none');

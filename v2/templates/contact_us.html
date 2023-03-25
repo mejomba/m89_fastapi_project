@@ -4,6 +4,7 @@
 
 {% block style %}
   <link rel="stylesheet" href="../statics/css/contact_us.css">
+  <link rel="stylesheet" href="{{ url_for('statics', path="css/contact_us.css") }}">
 {% endblock %}
 
 {% block content %}
@@ -34,19 +35,19 @@
       <ul class="list-unstyled">
           <li class="my-2">
               <div class="d-flex justify-content-center align-items-center">
-                  <img src="../statics/images/address.svg" width="24" alt="address" class="ms-3">
+                  <img src="{{ url_for('statics', path="images/address.svg") }}" width="24" alt="address" class="ms-3">
                   <span>تهران-میدان انقلاب</span>
               </div>
           </li>
           <li class="my-2">
               <div class="d-flex justify-content-center align-items-center">
-                  <img src="../statics/images/telephone.svg" width="24" alt="telephone" class="ms-3">
+                  <img src="{{ url_for('statics', path="images/telephone.svg") }}" width="24" alt="telephone" class="ms-3">
                   <span>021-4455132</span>
               </div>
           </li>
           <li class="my-2">
               <div class="d-flex justify-content-center align-items-center">
-                  <img src="../statics/images/email.svg" width="24" alt="email" class="ms-3">
+                  <img src="{{ url_for('statics', path="images/email.svg") }}" width="24" alt="email" class="ms-3">
                   <span>contact@email.com</span>
               </div>
           </li>

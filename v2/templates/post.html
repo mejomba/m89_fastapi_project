@@ -32,9 +32,9 @@
             {% for comment in comments %}
             <div class="card-body border m-2 shadow">
             <div class="d-flex flex-start align-items-center">
-{#              <img class="rounded-circle shadow-1-strong me-3"#}
-{#                src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="60"#}
-{#                height="60" />#}
+              <img class="rounded-circle shadow-1-strong me-3"
+                src="{{ comment.user_related.image }}" alt="avatar" width="60"
+                height="60" />
               <div class="me-2">
                 <h6 class="fw-bold text-primary mb-1">{{ comment.user_related.first_name }} {{ comment.user_related.last_name }}</h6>
                 <p class="text-muted small mb-0">

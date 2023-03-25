@@ -3,12 +3,6 @@
 {% block title %} مدیریت کامنت ها {% endblock %}
 
 {% block style %}
-    <style>
-        .post-img-thumbnail {
-            width: 16rem;
-            height: 9rem;
-        }
-    </style>
 {% endblock %}
 
 {% block content %}
@@ -17,48 +11,6 @@
     {% if user %}
     <div class="container-fluid">
       <div class="row">
-
-{#      <div class="col-md-3">#}
-{#          <div class="sticky-top">#}
-{#              <ul class="list-group p-0 my-md-0 my-4">#}
-{#                  <li class="list-group-item d-flex justify-content-between align-items-center">#}
-{#                    <a href={{ url_for("user_profile") }}>پست های من</a>#}
-{#                    <span class="badge bg-primary rounded-pill">{{ user_posts | length }}</span>#}
-{#                  </li>#}
-{##}
-{#                  {% if user.role != 'regular_user' %}#}
-{#                      <li class="list-group-item d-flex justify-content-between align-items-center">#}
-{#                        <a href={{ url_for("create_post") }} >ایجاد پست</a>#}
-{#                        <span class="badge bg-primary rounded-pill"></span>#}
-{#                      </li>#}
-{#                  {% endif %}#}
-{##}
-{#                  {% if user.role == 'admin' %}#}
-{#                      <li class="list-group-item d-flex justify-content-between align-items-center">#}
-{#                        <a href={{ url_for("get_user_request_manage") }} >درخواست های کاربران</a>#}
-{#                        <span class="badge bg-primary rounded-pill">{{ request_count }}</span>#}
-{#                      </li>#}
-{#                      <li class="list-group-item d-flex justify-content-between align-items-center">#}
-{#                        <a href={{ url_for("post_manage") }} >پست های در انتظار</a>#}
-{#                        <span class="badge bg-primary rounded-pill"></span>#}
-{#                      </li>#}
-{#                      <li class="list-group-item d-flex justify-content-between align-items-center">#}
-{#                        <a href={{ url_for("comment_manage") }} >کامنت های در انتظار</a>#}
-{#                        <span class="badge bg-primary rounded-pill"></span>#}
-{#                      </li>#}
-{#                  {% endif %}#}
-{##}
-{#                  <li class="list-group-item d-flex justify-content-between align-items-center">#}
-{#                    <a href={{ url_for('get_all_comment_user', user_name=user.username) }} >کامنت های من</a>#}
-{#                  </li>#}
-{#                  {% if user.role == 'regular_user' %}#}
-{#                  <li class="list-group-item d-flex justify-content-between align-items-center">#}
-{#                    <span role="button" id="request-writer">نویسنده شدن</span>#}
-{#                  </li>#}
-{#                    {% endif %}#}
-{#            </ul>#}
-{#          </div>#}
-{#      </div>#}
 
       {% include "sidebar.html" %}
 
@@ -124,12 +76,6 @@
 {% else %}
     <h1 class="text-center text-danger bg-warning p-4">برای دسترسی به این صفحه باید وارد شوید</h1>
 {% endif %}
-
-
-
-
-
-
 {% endblock %}
 
 {% block script %}
