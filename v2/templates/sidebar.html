@@ -1,8 +1,11 @@
 <div class="col-md-3">
           <div class="sticky-top pt-1">
-          <div class="d-flex align-items-center py-1">
-              <img src="{{ user.image }}" alt="user image" class="rounded-circle p-1 border ms-3 me-1" style="width: 4.5rem; height: 4.5rem">
-              <h5>{{ user.first_name }} {{ user.last_name }} </h5> <small class="me-2 badge bg-success">{{ user.role }}</small>
+          <div class="d-flex align-items-center justify-content-between p-1 border">
+              <div class="d-flex align-items-center">
+                  <img src="{{ user.image }}" alt="user image" class="rounded-circle p-1 border ms-3 me-1" style="width: 4.5rem; height: 4.5rem">
+                  <h5>{{ user.first_name }} {{ user.last_name }} </h5>
+              </div>
+              <small class="me-2 badge bg-success">{{ user.role }}</small>
           </div>
               <ul class="list-group p-0 my-md-0 my-4">
                   <li class="list-group-item list-group-item-action">
@@ -45,7 +48,7 @@
                       <form action={{ url_for('delete_user', user_id=user.user_id) }}>
                             <button class="btn btn-danger" role="button" id="remove-account"> حذف حساب</button>
                       </form>
-                      <a href="{{ url_for('update_user', user_id=user.user_id) }}" class="btn btn-primary">ویرایش حساب</a>
+                      <a href="{{ url_for('update_user', user_id=user.user_id) }}" class="btn btn-outline-primary">ویرایش حساب</a>
                   </li>
             </ul>
             {% if not user.image %}
