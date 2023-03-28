@@ -45,7 +45,7 @@ function updateProfileImageFileLoad(event){
     const formData = new FormData(updateUserForm)
         updateUser(this.action, localStorage.getItem('access_token'), {
         username: formData.get('username'),
-        password: formData.get('password'),
+        // password: formData.get('password'),
         email: formData.get('email'),
         first_name: formData.get('first_name'),
         last_name: formData.get('last_name'),

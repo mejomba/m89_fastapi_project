@@ -19,6 +19,8 @@ class CreateUser(BaseModel):
     @validator('phone')
     def validate_phone(cls, v):
         pattern = r'(0|\+98)?([ ]|-|[()]){0,2}9[1|2|3|4]([ ]|-|[()]){0,2}(?:[0-9]([ ]|-|[()]){0,2}){8}'
+        if not v:
+            return v
         if not re.match(pattern, v):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='phone not valid')
         return v
@@ -27,6 +29,7 @@ class CreateUser(BaseModel):
 class UpdateUser(CreateUser):
     image: str | None = None
     remove_image: bool | None = None
+    password: Optional[str]
 
 
 class ResponseUser(BaseModel):

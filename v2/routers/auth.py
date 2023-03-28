@@ -66,9 +66,11 @@ def update_user(request: Request,
                 db: Session = Depends(get_db),
                 current_user: models.auth.User = Depends(jwt_manager.get_current_user)):
     context = {'request': request, 'user': current_user}
+    print(payload)
 
     user_query = db.query(models.auth.User).filter(models.auth.User.user_id == user_id)
     user = user_query.first()
+
 
     if not user:
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -87,6 +89,7 @@ def update_user(request: Request,
     else:
         image_url = f'/statics/images/upload/user/no_image.png'
 
+    payload.password = user.password
     payload_dict = payload.dict()
     payload_dict.pop('remove_image')
     payload_dict.update({'image': image_url, 'last_update': datetime.now()})
@@ -97,8 +100,6 @@ def update_user(request: Request,
     except Exception:
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return
-
-
 
 
 @router.post('/login', response_model=schemas.auth.Token)
@@ -180,12 +181,9 @@ def get_user_request_manage(request: Request,
 
     if current_user.role == 'admin':
         user_requests = db.query(models.auth.UserRequest).order_by(models.auth.UserRequest.status).all()
-        c = 0
-        for item in user_requests:
-            if item.status == 'pending':
-                c += 1
+
         # user_requests_pending = db.query(models.auth.UserRequest).filter(models.auth.UserRequest.status == 'pending').all()
-        context = {'request': request, 'user': current_user, 'user_requests': user_requests, 'request_count': c}
+        context = {'request': request, 'user': current_user, 'user_requests': user_requests}
         return template.TemplateResponse('user_manage.html', context)
 
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='شما به این بخش دسترسی ندارید')
@@ -230,12 +228,9 @@ def user_manage(request: Request,
         return template.TemplateResponse('404.html', context)
 
     if current_user.role == 'admin':
-        # if username:
-            target_user = db.query(models.auth.User).filter(models.auth.User.username == username).first()
-            context.update({'target_user': target_user})
-            return template.TemplateResponse('user_manage_by_username.html', context)
-        # else:
-        #     return template.TemplateResponse('user_manage_by_username.html', context)
+        target_user = db.query(models.auth.User).filter(models.auth.User.username == username).first()
+        context.update({'target_user': target_user})
+        return template.TemplateResponse('user_manage_by_username.html', context)
 
 
 @router.put('/user/manage/{user_id}', status_code=status.HTTP_206_PARTIAL_CONTENT)
@@ -258,8 +253,7 @@ def user_manage(request: Request,
     try:
         user_query.update({'role': payload.get('role')}, synchronize_session=False)
         db.commit()
-    except Exception as e:
-        print(e)
+    except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='error')
 
 
@@ -300,9 +294,9 @@ def admin_contact_us(request: Request,
         return template.TemplateResponse('messages.html', context)
     return template.TemplateResponse('404.html', context)
 
+
 @router.post('/contact_us', status_code=status.HTTP_200_OK)
 def contact_us(payload: schemas.auth.ContactUs, db: Session = Depends(get_db)):
-    print(payload)
     try:
         new_contact_us = models.auth.ContactUs(**payload.dict())
         db.add(new_contact_us)
