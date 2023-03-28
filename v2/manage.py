@@ -2,6 +2,7 @@ import argparse
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
+import utils
 
 DATABASE_URL = "postgresql://hhcxbbfm:sZV-t7aFHw-KW3eRuFMkg-6gLp1KxfJh@mouse.db.elephantsql.com/hhcxbbfm"
 
@@ -32,6 +33,7 @@ if args:
     role = 'admin'
 
     if username and email and password and first_name and last_name and role:
+        password = utils.hash_password(password)
         query = """INSERT INTO users (email, username, first_name, last_name, password, role) VALUES (%s,%s,%s,%s,%s,%s) RETURNING *"""
         data = email, username, first_name, last_name, password, role
         try:
