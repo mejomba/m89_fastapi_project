@@ -52,10 +52,13 @@ def create_user(payload: schemas.auth.CreateUser, db: Session = Depends(get_db))
 
 @router.get('/user/update/{user_id}')
 def update_user(request: Request,
+                user_id: int,
                 current_user: models.auth.User = Depends(jwt_manager.get_current_user)):
     context = {'request': request, 'user': current_user}
-
-    return template.TemplateResponse('update_user.html', context)
+    if current_user.user_id == user_id:
+        return template.TemplateResponse('update_user.html', context)
+    else:
+        return template.TemplateResponse('404.html', context)
 
 
 @router.put('/user/update/{user_id}', status_code=status.HTTP_206_PARTIAL_CONTENT)
@@ -70,7 +73,6 @@ def update_user(request: Request,
 
     user_query = db.query(models.auth.User).filter(models.auth.User.user_id == user_id)
     user = user_query.first()
-
 
     if not user:
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -100,6 +102,43 @@ def update_user(request: Request,
     except Exception:
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return
+
+
+@router.get('/change_password/{user_id}')
+def change_password(request: Request,
+                    user_id: int,
+                    current_user: models.auth.User = Depends(jwt_manager.get_current_user)):
+    context = {'request': request, 'user': current_user}
+    if current_user.user_id != user_id:
+        return template.TemplateResponse('404.html', context)
+    return template.TemplateResponse('change_password.html', context)
+
+
+@router.put('/change_password/{user_id}', status_code=status.HTTP_206_PARTIAL_CONTENT)
+def change_password(request: Request,
+                    payload: schemas.auth.ChangePassword,
+                    user_id: int,
+                    db: Session = Depends(get_db),
+                    current_user: models.auth.User = Depends(jwt_manager.get_current_user)):
+    context = {'request': request}
+    if current_user.user_id != user_id:
+        return template.TemplateResponse('404.html', context)
+
+    if not utils.verify(payload.password_old, current_user.password):
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='wrong password')
+
+    user_query = db.query(models.auth.User).filter(models.auth.User.user_id == current_user.user_id)
+
+    payload_dict = payload.dict()
+    payload_dict.pop('password_old')
+    payload_dict.pop('password_repeat')
+    payload_dict.update({'password': utils.hash_password(payload.password)})
+
+    try:
+        user_query.update(payload_dict, synchronize_session=False)
+        db.commit()
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='error')
 
 
 @router.post('/login', response_model=schemas.auth.Token)

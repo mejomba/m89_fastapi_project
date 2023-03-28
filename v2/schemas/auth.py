@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import EmailStr, BaseModel, validator
+from pydantic import EmailStr, BaseModel, validator, root_validator
 from fastapi import HTTPException, status
 import re
 
@@ -31,6 +31,21 @@ class UpdateUser(CreateUser):
     remove_image: bool | None = None
     password: Optional[str]
 
+
+class ChangePassword(BaseModel):
+    password_old: str
+    password: str
+    password_repeat: str
+
+    @root_validator
+    def validate_password(cls, v):
+        pass1 = v.get('password')
+        pass2 = v.get('password_repeat')
+        print(pass1)
+        print(pass2)
+        if pass1 != pass2:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='password1 and password2 not match')
+        return v
 
 class ResponseUser(BaseModel):
     email: EmailStr
