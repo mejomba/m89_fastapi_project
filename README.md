@@ -25,7 +25,7 @@ also you can use any other python environment manager like `pipenv` `condaenv` `
 from commandline (terminal) use `cd v2` go to `v2` directory and run `python manage.py --createsuperuser <username>`
 follow the instruction to create superuser like following image
 
-![](v2/statics/images/create superuser.png/)
+![](v2/statics/images/create_superuser.png)
 
 ### 5. run the server
 open `v2/main.py` file and click on run button
