@@ -109,11 +109,23 @@
         </form>
       </div>
 
-          <div id="user-manage-search-target" class="col-lg-7 text-center border border-rounded p-2">
+          <div id="user-manage-search-target" class="col-lg-7 text-center border border-rounded p-3">
               {% if target_user %}
-                  <div class="d-flex mb-4">
-                    <h4>{{ target_user.first_name }} {{ target_user.last_name }}</h4>
-                    <div class="me-2"><span class="">({{ target_user.role }})</span></div>
+                  <div class="d-flex mt-3">
+                  <span class="ms-2">نام: </span>
+                    <span>{{ target_user.first_name }} {{ target_user.last_name }}</span>
+                  </div>
+                  <div class="d-flex my-1">
+                  <span class="ms-2">نقش کاربر: </span>
+                    <div><span class="badge bg-success">{{ target_user.role }}</span></div>
+                  </div>
+                  <div class="d-flex my-1">
+                  <span class="ms-2">نام کاربری: </span>
+                    <span>{{ target_user.username }} </span>
+                  </div>
+                  <div class="d-flex my-1 mb-3">
+                  <span class="ms-2">ایمیل: </span>
+                    <span>{{ target_user.email }} </span>
                   </div>
                   <form action="{{ url_for('user_manage', user_id=target_user.user_id) }}" id="update-user-by-admin">
                       <div class="d-flex mb-3 justify-content-start align-items-center">
