@@ -30,12 +30,13 @@ if args:
     password = input('password: ')
     first_name = input('first_name: ')
     last_name = input('last_name: ')
+    image = '/statics/images/upload/user/no_image.png'
     role = 'admin'
 
     if username and email and password and first_name and last_name and role:
         password = utils.hash_password(password)
-        query = """INSERT INTO users (email, username, first_name, last_name, password, role) VALUES (%s,%s,%s,%s,%s,%s) RETURNING *"""
-        data = email, username, first_name, last_name, password, role
+        query = """INSERT INTO users (email, username, first_name, last_name, password, image, role) VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING *"""
+        data = email, username, first_name, last_name, password, image, role
         try:
             cur.execute(query, data)
             conn.commit()
