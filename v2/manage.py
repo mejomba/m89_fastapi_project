@@ -8,9 +8,10 @@ import utils
 DB_USER = 'm89_fastapi_user'
 DB_PASSWORD = 'secretpassword'
 DB_NAME = 'm89_fastapi_blog'
+DB_HOST = 'fastapi_db'
 
 # DATABASE_URL = "postgresql://hhcxbbfm:sZV-t7aFHw-KW3eRuFMkg-6gLp1KxfJh@mouse.db.elephantsql.com/hhcxbbfm"
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@localhost:5432/{DB_NAME}"  # databasename://user:password@ip_address/database
+DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}"  # databasename://user:password@ip_address/database
 
 while True:
     try:
