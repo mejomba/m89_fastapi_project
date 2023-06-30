@@ -239,17 +239,20 @@ def change_user_role(
     if current_user.role == 'admin':
         if payload.user_request_action == 'ok':
             user_request_query = db.query(models.auth.UserRequest).filter(models.auth.UserRequest.user_request_id == user_request_id)
-            user_request_query.delete(synchronize_session=False)
+            user_request_query.update({'status': 'published', 'last_update': datetime.now()}, synchronize_session=False)
+            # user_request_query.delete(synchronize_session=False)
             db.commit()
 
             user_request = user_request_query.first()
             user_query = db.query(models.auth.User).filter(models.auth.User.user_id == user_request.user_id)
-            user_query.delete(synchronize_session=False)
+            user_query.update({'role': 'writer'}, synchronize_session=False)
+            # user_query.delete(synchronize_session=False)
             db.commit()
         elif payload.user_request_action == 'reject':
             user_request_query = db.query(models.auth.UserRequest).filter(
                 models.auth.UserRequest.user_request_id == user_request_id)
-            user_request_query.delete(synchronize_session=False)
+            user_request_query.update({'status': 'reject', 'last_update': datetime.now()}, synchronize_session=False)
+            # user_request_query.delete(synchronize_session=False)
             db.commit()
 
     # raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='شما به این بخش دسترسی ندارید')

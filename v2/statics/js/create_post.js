@@ -14,6 +14,7 @@ async function createPost(url="", token, data={}) {
         userAlert.classList.remove('alert-danger');
         userAlert.classList.remove('d-none');
         modal.classList.remove('open-modal');
+        window.location.replace('/dashboard')
     }else if(response.status === 403) {
         alertMessage.innerText = "برای ایجاد پست باید نویسنده باشید، از پروفایل، منو کناری درخواست نویسنده شدن بدهید"
         userAlert.classList.add('alert-danger');

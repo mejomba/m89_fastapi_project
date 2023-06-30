@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  fastapi_app:
+    image: fastapi-app
+    ports:
+      - "81:81"
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    environment:
+      DB_USER: m89_fastapi_user
+      DB_PASSWORD: secretpassword
+      DB_NAME: m89_fastapi_blog
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    container_name: fastapi_db

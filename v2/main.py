@@ -34,4 +34,4 @@ def contact_us(request: Request, current_user: models.auth.User = Depends(jwt_ma
 
 
 if __name__ == "__main__":
-    uvicorn.run(f'{__name__}:app', reload=True)
+    uvicorn.run(f'{__name__}:app', reload=True, port=8001)
