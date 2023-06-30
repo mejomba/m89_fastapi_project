@@ -11,9 +11,9 @@ services:
   db:
     image: postgres
     environment:
-      DB_USER: m89_fastapi_user
-      DB_PASSWORD: secretpassword
-      DB_NAME: m89_fastapi_blog
+      POSTGRES_DB: m89_fastapi_blog
+      POSTGRES_USER: m89_fastapi_user
+      POSTGRES_PASSWORD: secretpassword
     volumes:
       - ./db:/var/lib/postgresql/data
     container_name: fastapi_db
