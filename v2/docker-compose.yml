@@ -2,7 +2,12 @@ version: "3"
 
 services:
   fastapi_app:
+    build: .
+    volumes:
+      - .:.
     image: fastapi-app
+    container_name: fastapi_app
+    command: uvicorn main:app --host 0.0.0.0 --port 8001
     ports:
       - "81:8001"
     depends_on:
