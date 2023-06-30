@@ -4,7 +4,13 @@ from psycopg2.extras import RealDictCursor
 import time
 import utils
 
-DATABASE_URL = "postgresql://hhcxbbfm:sZV-t7aFHw-KW3eRuFMkg-6gLp1KxfJh@mouse.db.elephantsql.com/hhcxbbfm"
+
+DB_USER = 'm89_fastapi_user'
+DB_PASSWORD = 'secretpassword'
+DB_NAME = 'm89_fastapi_blog'
+
+# DATABASE_URL = "postgresql://hhcxbbfm:sZV-t7aFHw-KW3eRuFMkg-6gLp1KxfJh@mouse.db.elephantsql.com/hhcxbbfm"
+DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@localhost:5432/{DB_NAME}"  # databasename://user:password@ip_address/database
 
 while True:
     try:
