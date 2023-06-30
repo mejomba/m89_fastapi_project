@@ -4,7 +4,7 @@ services:
   fastapi_app:
     image: fastapi-app
     ports:
-      - "81:81"
+      - "81:8001"
     depends_on:
       - db
 
