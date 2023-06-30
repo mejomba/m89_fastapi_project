@@ -2,7 +2,6 @@ import uvicorn
 from fastapi import Request, FastAPI, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-import jinja_custome_filter
 import jwt_manager
 from database_manager import engine
 from routers import auth, posts
