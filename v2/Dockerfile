@@ -8,7 +8,7 @@ COPY ./requirement.txt ./requirement.txt
 
 COPY . /app
 
-RUN pip install --no-cache-dir -r requirement.txt
+RUN pip install -r requirement.txt
 
 EXPOSE 81
 
