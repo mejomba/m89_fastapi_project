@@ -11,9 +11,9 @@ services:
   db:
     image: postgres
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
       - ./db:/var/lib/postgresql/data
     container_name: fastapi_db
