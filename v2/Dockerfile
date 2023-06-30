@@ -2,11 +2,11 @@ FROM python:3.10-alpine
 ENV PYTHONBUFFERED=1
 RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 
-WORKDIR /code
+WORKDIR .
 
-COPY ./requirement.txt /code/requirement.txt
+COPY ./requirement.txt ./requirement.txt
 
-COPY . /code/app
+COPY . /app
 
 RUN pip install --no-cache-dir -r requirement.txt
 
