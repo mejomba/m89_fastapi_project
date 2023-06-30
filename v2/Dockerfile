@@ -6,10 +6,10 @@ WORKDIR .
 
 COPY ./requirement.txt ./requirement.txt
 
-COPY . /app
+COPY . .
 
 RUN pip install -r requirement.txt
 
 EXPOSE 81
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "81"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "81"]
