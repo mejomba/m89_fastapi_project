@@ -6,7 +6,7 @@ import jwt_manager
 from database_manager import engine
 from routers import auth, posts
 import models.auth, models.posts
-
+import jinja_custome_filter
 
 models.auth.BASE.metadata.create_all(bind=engine)
 models.posts.BASE.metadata.create_all(bind=engine)
