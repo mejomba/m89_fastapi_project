@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 POSTGRES_USER = 'postgres'
-POSTGRES_PASSWORD = 'secretpassword'
+POSTGRES_PASSWORD = 'postgres'
 POSTGRES_DB = 'postgres'
 DB_HOST = 'fastapi_db'
 # DATABASE_URL = "postgresql://postgres:1@localhost:5432/fastapi_project2"  # databasename://user:password@ip_address/database
