@@ -6,7 +6,7 @@ import utils
 
 
 POSTGRES_USER = 'postgres'
-POSTGRES_PASSWORD = 'secretpassword'
+POSTGRES_PASSWORD = 'postgres'
 POSTGRES_DB = 'postgres'
 DB_HOST = 'fastapi_db'
 
