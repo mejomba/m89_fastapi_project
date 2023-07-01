@@ -15,7 +15,7 @@ DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{DB_HOST}:5432
 
 while True:
     try:
-        conn = psycopg2.connect(host='mouse.db.elephantsql.com', database='hhcxbbfm', user='hhcxbbfm', password='sZV-t7aFHw-KW3eRuFMkg-6gLp1KxfJh',
+        conn = psycopg2.connect(host=DB_HOST, database=POSTGRES_DB, user=POSTGRES_USER, password=POSTGRES_PASSWORD,
                                 cursor_factory=RealDictCursor)
         cur = conn.cursor()
         print('connect to database.')
