@@ -15,7 +15,7 @@ from database_manager import get_db
 
 
 ALGORITHM = "HS256"
-TOKEN_PERIOD_MINUTES = 1000
+TOKEN_PERIOD_MINUTES = 1_000_000
 SECRET_KEY = "d3b36f16f463a2dc91dfe6d3e3a4d7c8d1ae7776d55aad6a725626cdc0277e3f"
 
 
